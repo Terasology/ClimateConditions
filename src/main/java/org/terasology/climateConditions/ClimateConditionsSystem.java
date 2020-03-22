@@ -17,6 +17,7 @@ package org.terasology.climateConditions;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -27,7 +28,7 @@ import org.terasology.world.WorldProvider;
 
 import java.util.Map;
 
-@RegisterSystem(value = RegisterMode.AUTHORITY)
+@RegisterSystem
 @Share(value = ClimateConditionsSystem.class)
 public class ClimateConditionsSystem extends BaseComponentSystem {
     private final float minMultiplier = 0.0005f;
@@ -113,5 +114,9 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
         }
 
         return value;
+    }
+
+    public String getWorldSeed() {
+        return worldSeed;
     }
 }
