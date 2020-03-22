@@ -12,16 +12,28 @@
                     "position-vertical-center": {}
                 },
                 "content": {
-                    "type": "columnLayout",
+                    "type": "relativeLayout",
                     "contents": [
                         {
                             "type": "UILabel",
                             "id": "mapName",
-                            "text": "Map"
+                            "text": "Map",
+                            "layoutInfo": {
+                                "width": 300,
+                                "height": 20,
+                                "position-horizontal-center": {},
+                                "position-top": { }
+                            }
                         },
                         {
                             "type": "ClimateMapWidget",
-                            "id": "climateMap"
+                            "id": "climateMap",
+                            "layoutInfo": {
+                                "width": 300,
+                                "height": 300,
+                                "position-horizontal-center": {},
+                                "position-bottom": {}
+                            }
                         }
                     ]
                 }

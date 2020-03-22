@@ -20,7 +20,7 @@ public class ClimateMapWidget extends CoreWidget {
                 for (int j = 0; j < SIZE_OF_IMAGE; j++) {
                     float color = (showMapCommand.getClimateConditionsBase().get(showMapCommand.getPlayer().getPosition().x -
                             (SIZE_OF_IMAGE / 2) + i, showMapCommand.getMapHeight(), showMapCommand.getPlayer().getPosition().z - (SIZE_OF_IMAGE / 2) + j));
-                    canvas.drawLine(i, j, i, j, new Color(color, color, color));
+                    canvas.drawLine(i, j, i+1, j+1, new Color(color, color, color));
                 }
             }
         }
