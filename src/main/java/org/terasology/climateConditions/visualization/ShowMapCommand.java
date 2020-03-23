@@ -1,12 +1,25 @@
+/*
+ * Copyright 2020 MovingBlocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.terasology.climateConditions.visualization;
 
 import com.google.common.base.Function;
-import org.slf4j.LoggerFactory;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionsBaseField;
 import org.terasology.context.Context;
-import org.terasology.engine.SimpleUri;
-import org.terasology.engine.paths.PathManager;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
@@ -18,6 +31,8 @@ import org.terasology.world.WorldProvider;
 
 @RegisterSystem
 public class ShowMapCommand extends BaseComponentSystem {
+    public static final int SIZE_OF_IMAGE = 300;
+
     @In
     private ClimateConditionsSystem climateConditions;
     @In
@@ -28,8 +43,6 @@ public class ShowMapCommand extends BaseComponentSystem {
     private Context context;
     @In
     private WorldProvider worldProvider;
-
-    public static final int SIZE_OF_IMAGE = 300;
 
     private ConditionsBaseField base;
     private int mapHeight;
@@ -52,10 +65,10 @@ public class ShowMapCommand extends BaseComponentSystem {
         if (climateConditions.getWorldSeed() == null) {
             setClimateSeed();
         }
-
         if (climateConditions.getTemperatureBaseField() == null) {
             initializeClimateTemperature();
-        } else if (climateConditions.getHumidityBaseField() == null) {
+        }
+        if (climateConditions.getHumidityBaseField() == null) {
             initializeClimateHumidity();
         }
 
@@ -65,23 +78,10 @@ public class ShowMapCommand extends BaseComponentSystem {
             base = climateConditions.getHumidityBaseField();
         }
 
-        /*BufferedImage image = new BufferedImage(SIZE_OF_IMAGE, SIZE_OF_IMAGE, BufferedImage.TYPE_INT_RGB);
-        for (int i = 0; i < SIZE_OF_IMAGE; i++) {
-            for (int j = 0; j < SIZE_OF_IMAGE; j++) {
-                int color = (int) (255 * base.get(localPlayer.getPosition().x - (SIZE_OF_IMAGE / 2) + i, height, localPlayer.getPosition().z - (SIZE_OF_IMAGE / 2) + j));
-                image.setRGB(i, j, new Color(color, color, color).getRGB());
-            }
-        }
-        try {*/
-            nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
-           // DisplayConditionScreen screen = context.get(DisplayConditionScreen.class);
-           // screen.setMapName(mapType.toUpperCase() + " map");
-           /* screen.setMapImage(Assets.getTextureRegion("ClimateConditions:mapTexture").get());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
     }
 
+    // TODO: change the initialization so that maps reflect the corresponding world location
     private void initializeClimateHumidity() {
         climateConditions.configureHumidity(0, 200, 10, new Function<Float, Float>() {
             @Override
@@ -91,7 +91,6 @@ public class ShowMapCommand extends BaseComponentSystem {
         }, 0, 1);
     }
     private void initializeClimateTemperature() {
-        LoggerFactory.getLogger(this.getClass()).info("humidity: "+climateConditions.getHumidityBaseField());
         climateConditions.configureTemperature(0, 200, 10, new Function<Float, Float>() {
             @Override
             public Float apply(Float input) {

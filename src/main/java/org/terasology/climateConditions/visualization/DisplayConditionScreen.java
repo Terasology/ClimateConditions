@@ -1,6 +1,21 @@
+/*
+ * Copyright 2020 MovingBlocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.terasology.climateConditions.visualization;
 
-import org.slf4j.LoggerFactory;
 import org.terasology.context.Context;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.CoreScreenLayer;
@@ -10,21 +25,9 @@ public class DisplayConditionScreen extends CoreScreenLayer {
     @In
     private Context context;
 
-    private String mapName;
-
-    private UILabel UIMapName;
-    private ClimateMapWidget climateMapWidget;
-
-    public void setShowMapCommand(ShowMapCommand command) {
-        climateMapWidget.setShowMapCommand(command);
-    }
-
     @Override
     public void initialise() {
-        climateMapWidget = find("climateMap", ClimateMapWidget.class);
-
-        LoggerFactory.getLogger("").info("1: "+climateMapWidget);
-        LoggerFactory.getLogger("").info("2: "+context);
+        ClimateMapWidget climateMapWidget = find("climateMap", ClimateMapWidget.class);
         climateMapWidget.setShowMapCommand(context.get(ShowMapCommand.class));
     }
 }
