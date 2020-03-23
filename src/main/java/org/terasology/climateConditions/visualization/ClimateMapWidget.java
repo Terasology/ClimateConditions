@@ -27,6 +27,10 @@ import static org.terasology.climateConditions.visualization.ShowMapCommand.SIZE
 public class ClimateMapWidget extends CoreWidget {
     private ShowMapCommand showMapCommand;
 
+    /**
+     * Converts the base climate condition values to a color, and draws them on the canvas.
+     * @param canvas The canvas that the map is drawn on.
+     */
     @Override
     public void onDraw(Canvas canvas) {
         if (showMapCommand != null) {

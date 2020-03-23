@@ -81,6 +81,9 @@ public class ShowMapCommand extends BaseComponentSystem {
         nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
     }
 
+    /**
+     * Configures humidity.
+     */
     // TODO: change the initialization so that maps reflect the corresponding world location
     private void initializeClimateHumidity() {
         climateConditions.configureHumidity(0, 200, 10, new Function<Float, Float>() {
@@ -90,6 +93,10 @@ public class ShowMapCommand extends BaseComponentSystem {
             }
         }, 0, 1);
     }
+
+    /**
+     * Configures temperature.
+     */
     private void initializeClimateTemperature() {
         climateConditions.configureTemperature(0, 200, 10, new Function<Float, Float>() {
             @Override
