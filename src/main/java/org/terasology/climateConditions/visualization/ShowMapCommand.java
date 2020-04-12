@@ -34,23 +34,13 @@ public class ShowMapCommand extends BaseComponentSystem {
     public static final int SIZE_OF_IMAGE = 300;
 
     @In
-    private ClimateConditionsSystem climateConditions;
+    ClimateMapDisplaySystem climateSystem;
+
     @In
-    private LocalPlayer localPlayer;
+    private ClimateConditionsSystem climateConditions;
+
     @In
     private NUIManager nuiManager;
-    @In
-    private Context context;
-    @In
-    private WorldProvider worldProvider;
-
-    private ConditionsBaseField base;
-    private int mapHeight;
-
-    @Override
-    public void postBegin() {
-        context.put(ShowMapCommand.class, this);
-    }
 
     /**
      * Displays the selected map at the selected height level.
@@ -60,62 +50,14 @@ public class ShowMapCommand extends BaseComponentSystem {
      */
     @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) at a given height level.")
     public void showClimateMap(@CommandParam("map type") String mapType, @CommandParam("height to look at") int height) {
-        mapHeight = height;
-
-        if (climateConditions.getWorldSeed() == null) {
-            setClimateSeed();
-        }
-        if (climateConditions.getTemperatureBaseField() == null) {
-            initializeClimateTemperature();
-        }
-        if (climateConditions.getHumidityBaseField() == null) {
-            initializeClimateHumidity();
-        }
+        climateSystem.setMapHeight(height);
 
         if (mapType.equals("temperature")) {
-            base = climateConditions.getTemperatureBaseField();
+            climateSystem.setClimateConditionsBase(climateConditions.getTemperatureBaseField());
         } else {
-            base = climateConditions.getHumidityBaseField();
+            climateSystem.setClimateConditionsBase(climateConditions.getHumidityBaseField());
         }
 
         nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
-    }
-
-    /**
-     * Configures humidity.
-     */
-    // TODO: change the initialization so that maps reflect the corresponding world location
-    private void initializeClimateHumidity() {
-        climateConditions.configureHumidity(0, 200, 10, new Function<Float, Float>() {
-            @Override
-            public Float apply(Float input) {
-                return input;
-            }
-        }, 0, 1);
-    }
-
-    /**
-     * Configures temperature.
-     */
-    private void initializeClimateTemperature() {
-        climateConditions.configureTemperature(0, 200, 10, new Function<Float, Float>() {
-            @Override
-            public Float apply(Float input) {
-                return input;
-            }
-        }, 0, 1);
-    }
-    private void setClimateSeed() {
-        climateConditions.setWorldSeed(worldProvider.getSeed());
-    }
-
-    public ConditionsBaseField getClimateConditionsBase() {
-        return base;
-    }
-    public LocalPlayer getPlayer() {
-        return localPlayer;
-    }
-    public int getMapHeight() {
-        return mapHeight;
     }
 }

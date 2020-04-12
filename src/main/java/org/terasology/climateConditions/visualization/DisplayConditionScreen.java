@@ -22,11 +22,11 @@ import org.terasology.rendering.nui.CoreScreenLayer;
 
 public class DisplayConditionScreen extends CoreScreenLayer {
     @In
-    private Context context;
+    private ClimateMapDisplaySystem climateSystem;
 
     @Override
     public void initialise() {
         ClimateMapWidget climateMapWidget = find("climateMap", ClimateMapWidget.class);
-        climateMapWidget.setShowMapCommand(context.get(ShowMapCommand.class));
+        climateMapWidget.setShowMapCommand(climateSystem);
     }
 }

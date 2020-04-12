@@ -26,7 +26,7 @@ import org.terasology.rendering.nui.CoreWidget;
 import static org.terasology.climateConditions.visualization.ShowMapCommand.SIZE_OF_IMAGE;
 
 public class ClimateMapWidget extends CoreWidget {
-    private ShowMapCommand showMapCommand;
+    private ClimateMapDisplaySystem climateSystem;
 
     /**
      * Converts the base climate condition values to a color, and draws them on the canvas.
@@ -34,15 +34,15 @@ public class ClimateMapWidget extends CoreWidget {
      */
     @Override
     public void onDraw(Canvas canvas) {
-        if (showMapCommand != null) {
+        if (climateSystem != null) {
             canvas.drawFilledRectangle(Rect2i.createFromMinAndMax(new Vector2i(0, 0), new Vector2i(SIZE_OF_IMAGE, SIZE_OF_IMAGE)), Color.WHITE);
             for (int i = 0; i < SIZE_OF_IMAGE; i++) {
                 for (int j = 0; j < SIZE_OF_IMAGE; j++) {
-                    Vector3f playerPosition = showMapCommand.getPlayer().getPosition();
-                    int height = showMapCommand.getMapHeight();
+                    Vector3f playerPosition = climateSystem.getPlayer().getPosition();
+                    int height = climateSystem.getMapHeight();
                     int offsetZ =  - (SIZE_OF_IMAGE / 2) + j;
                     int offsetX = - (SIZE_OF_IMAGE / 2) + i;
-                    float color = showMapCommand.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
+                    float color = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
                     canvas.drawLine(i, j, i + 1, j + 1, new Color(color, color, color));
                 }
             }
@@ -54,7 +54,7 @@ public class ClimateMapWidget extends CoreWidget {
         return new Vector2i(SIZE_OF_IMAGE, SIZE_OF_IMAGE);
     }
 
-    public void setShowMapCommand(ShowMapCommand command) {
-        showMapCommand = command;
+    public void setShowMapCommand(ClimateMapDisplaySystem command) {
+        climateSystem = command;
     }
 }
