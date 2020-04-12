@@ -59,7 +59,7 @@ public class ShowMapCommand extends BaseComponentSystem {
      * @param mapType
      */
     @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) at a given height level.")
-    public void showMap(@CommandParam("map type") String mapType, @CommandParam("height to look at") int height) {
+    public void showClimateMap(@CommandParam("map type") String mapType, @CommandParam("height to look at") int height) {
         mapHeight = height;
 
         if (climateConditions.getWorldSeed() == null) {

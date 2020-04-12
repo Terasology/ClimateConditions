@@ -18,6 +18,7 @@ package org.terasology.climateConditions.visualization;
 
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2i;
+import org.terasology.math.geom.Vector3f;
 import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.CoreWidget;
@@ -37,9 +38,11 @@ public class ClimateMapWidget extends CoreWidget {
             canvas.drawFilledRectangle(Rect2i.createFromMinAndMax(new Vector2i(0, 0), new Vector2i(SIZE_OF_IMAGE, SIZE_OF_IMAGE)), Color.WHITE);
             for (int i = 0; i < SIZE_OF_IMAGE; i++) {
                 for (int j = 0; j < SIZE_OF_IMAGE; j++) {
-                    float color = (showMapCommand.getClimateConditionsBase().get(showMapCommand.getPlayer().getPosition().x
-                            - (SIZE_OF_IMAGE / 2) + i, showMapCommand.getMapHeight(), showMapCommand.getPlayer().getPosition().z
-                            - (SIZE_OF_IMAGE / 2) + j));
+                    Vector3f playerPosition = showMapCommand.getPlayer().getPosition();
+                    int height = showMapCommand.getMapHeight();
+                    int offsetZ =  - (SIZE_OF_IMAGE / 2) + j;
+                    int offsetX = - (SIZE_OF_IMAGE / 2) + i;
+                    float color = showMapCommand.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
                     canvas.drawLine(i, j, i + 1, j + 1, new Color(color, color, color));
                 }
             }
