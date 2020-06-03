@@ -58,7 +58,7 @@ public class HyperthermiaSystem extends BaseComponentSystem {
         event.multiply(walkSpeedMultiplier);
     }
 
-    @ReceiveEvent(priority = EventPriority.PRIORITY_HIGH)
+    @ReceiveEvent
     public void onSpawn(OnPlayerSpawnedEvent event, EntityRef player, LocationComponent location) {
         final Optional<Biome> biome = biomeRegistry.getBiome(new Vector3i(location.getLocalPosition()));
         if (biome.get().getDisplayName().equals("Desert")) {
