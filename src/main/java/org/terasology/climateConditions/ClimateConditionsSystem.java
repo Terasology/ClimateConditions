@@ -15,12 +15,15 @@
  */
 package org.terasology.climateConditions;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import org.terasology.biomesAPI.BiomeRegistry;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
 import org.terasology.registry.Share;
+import org.terasology.world.WorldProvider;
+import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
 
@@ -29,6 +32,13 @@ import java.util.Map;
 public class ClimateConditionsSystem extends BaseComponentSystem {
     private final float minMultiplier = 0.0005f;
     private final float maxMultiplier = 0.01f;
+
+    @In
+    private BlockManager block;
+    @In
+    private BiomeRegistry biome;
+    @In
+    private WorldProvider world;
 
     private ConditionsBaseField temperatureBaseField;
     private ConditionsBaseField humidityBaseField;
@@ -41,11 +51,11 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
     private float humidityMinimum;
     private float humidityMaximum;
-    
+
     private String worldSeed;
-    
+
     public void setWorldSeed(String worldSeed){
-    	this.worldSeed = worldSeed;
+        this.worldSeed = worldSeed;
     }
 
     public void addTemperatureModifier(float order, ConditionModifier temperatureModifier) {
@@ -56,25 +66,33 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
         humidityModifiers.put(order, humidityModifier);
     }
 
-    public void configureTemperature(int seaLevel, int maxLevel, float diversity, Function<Float, Float> function,
-                                     float minimumValue, float maximumValue) {
+    public void configureTemperature() {
+        configureTemperature(0, 10,0, 1, world, biome);
+    }
+
+    public void configureHumidity() {
+        configureHumidity(0, 10, 0, 1, world, biome);
+    }
+
+    public void configureTemperature(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
         int seed = worldSeed.hashCode();
-        
+
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
 
-        temperatureBaseField = new ConditionsBaseField(seaLevel, maxLevel, noiseMultiplier, function, seed + 582374);
+        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, seaLevel, noiseMultiplier, .55f,
+                seed + 582374, block, biome, world);
 
         temperatureMinimum = minimumValue;
         temperatureMaximum = maximumValue;
     }
 
-    public void configureHumidity(int seaLevel, int maxLevel, float diversity, Function<Float, Float> function,
-                                  float minimumValue, float maximumValue) {
+    public void configureHumidity(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
         int seed = worldSeed.hashCode();
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
 
-        humidityBaseField = new ConditionsBaseField(seaLevel, maxLevel, noiseMultiplier, function, seed + 129534);
+        humidityBaseField = new ConditionsBaseField(ConditionsBaseField.HUMIDITY, seaLevel, noiseMultiplier, .3f,
+                seed + 129534, block, biome, world);
 
         humidityMinimum = minimumValue;
         humidityMaximum = maximumValue;
@@ -89,7 +107,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public float getTemperature(float x, float y, float z) {
-        float value = temperatureBaseField.get(x, y, z);
+        float value = temperatureBaseField.get(x, y, z, true);
 
         value = temperatureMinimum + value * (temperatureMaximum - temperatureMinimum);
 
@@ -101,7 +119,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public float getHumidity(float x, float y, float z) {
-        float value = humidityBaseField.get(x, y, z);
+        float value = humidityBaseField.get(x, y, z, true);
 
         value = humidityMinimum + value * (humidityMaximum - humidityMinimum);
 

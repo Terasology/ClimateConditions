@@ -15,41 +15,126 @@
  */
 package org.terasology.climateConditions;
 
-import com.google.common.base.Function;
+import org.terasology.biomesAPI.Biome;
+import org.terasology.biomesAPI.BiomeRegistry;
+import org.terasology.core.world.CoreBiome;
 import org.terasology.math.TeraMath;
-import org.terasology.utilities.procedural.Noise2D;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.utilities.procedural.SimplexNoise;
+import org.terasology.world.WorldProvider;
+import org.terasology.world.block.Block;
+import org.terasology.world.block.BlockManager;
 
 public class ConditionsBaseField {
-    private Noise2D noiseTable;
-    private int seaLevel;
-    private int maxLevel;
-    private float noiseMultiplier;
-    private Function<Float, Float> function;
+    public static final String TEMPERATURE = "temperature";
+    public static final String HUMIDITY = "humidity";
 
-    public ConditionsBaseField(int seaLevel, int maxLevel, float noiseMultiplier,
-                               Function<Float, Float> function, long conditionSeed) {
+    private String type;
+    private SimplexNoise noiseTable;
+    private int seaLevel;
+    private float temperatureBase;
+    private float noiseMultiplier;
+    private BlockManager blockManager;
+    private WorldProvider worldProvider;
+    private BiomeRegistry biomeManager;
+
+    public ConditionsBaseField(String type, int seaLevel, float noiseMultiplier, float temperatureBase,
+                               long conditionSeed, BlockManager block, BiomeRegistry biome, WorldProvider world) {
+        this.type = type;
         this.seaLevel = seaLevel;
-        this.maxLevel = maxLevel;
         this.noiseMultiplier = noiseMultiplier;
-        this.function = function;
+        this.temperatureBase = temperatureBase;
         noiseTable = new SimplexNoise(conditionSeed);
+        worldProvider = world;
+        blockManager = block;
+        biomeManager = biome;
     }
 
-    public float get(float x, float y, float z) {
-        return TeraMath.clamp(getConditionAlpha(x, y, z), 0, 1);
+    public float get(float x, float y, float z, boolean clamp) {
+        if (clamp) {
+            return TeraMath.clamp(getConditionAlpha(x, y, z), 0, 1);
+        } else {
+            return getConditionAlpha(x, y, z);
+        }
     }
 
     private float getConditionAlpha(float x, float y, float z) {
-        float result = noiseTable.noise(x * noiseMultiplier, z * noiseMultiplier);
-        float temperatureBase = function.apply(TeraMath.clamp((result + 1.0f) / 2.0f));
-        if (y <= seaLevel) {
-            return temperatureBase;
-        } else if (y >= maxLevel) {
-            return 0;
+        float initialResult = noiseTable.noise(x * noiseMultiplier, z * noiseMultiplier);
+
+        if (type.equals(TEMPERATURE)) {
+            return getTemperature(new Vector3i(x, y, z), initialResult);
         } else {
-            // The higher above see level - the colder
-            return temperatureBase * (1f * (maxLevel - y) / (maxLevel - seaLevel));
+            return getHumidity( new Vector3i(x, y, z), initialResult);
         }
+    }
+
+    /**
+     * Gets the temperature at a given location.
+     *
+     * Returns the temperature as a value between 0 and 1.
+     */
+    private float getTemperature(Vector3i position, float noise) {
+        if (position.y <= seaLevel) {
+            return temperatureBase;
+        } else {
+            // The higher above sea level - the colder (changes .6-1 degrees C per 100 ft change)
+            // Temperature decreased by the height above sea level times .005 as an approximation
+            float modifier = temperatureBase * (1 + noise) - (position.y - seaLevel) * .005f;
+            Block currentBlock = worldProvider.getBlock(position);
+            if (currentBlock != null && biomeManager.getBiome(position).isPresent()) {
+                Biome currentBiome = biomeManager.getBiome(position).get();
+
+                // Block-by-block modification
+                if (currentBlock.getDisplayName().contains("Lava")) {
+                    modifier += 1;
+                }
+                // Biome-by-biome modification
+                if (currentBiome.equals(CoreBiome.DESERT)) {
+                    modifier += .3;
+                } else if (currentBiome.equals(CoreBiome.SNOW)) {
+                    modifier -= .6;
+                } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
+                    modifier -= .1;
+                }
+                return modifier;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Gets the humidity at a given location.
+     */
+    private float getHumidity(Vector3i position, float noise) {
+        //Perfectly humid if the block is water
+        Block currentBlock = worldProvider.getBlock(position);
+        if (currentBlock != null) {
+            if (currentBlock.getDisplayName().contains("Water")) {
+                return 1;
+            }
+            // Reduce humidity (humidity = relative humidity) when temperature is higher
+            float modifier = (temperatureBase - getTemperature(position, noise)) * .05f * (1 + noise);
+
+            if (biomeManager.getBiome(position).isPresent()) {
+                // Different biomes indicate different humidities
+                Biome currentBiome = biomeManager.getBiome(position).get();
+                if (currentBiome.equals(CoreBiome.OCEAN) || currentBiome.equals(CoreBiome.SNOW)) {
+                    return TeraMath.clamp(.9f + modifier, 0, 1);
+                } else if (currentBiome.equals(CoreBiome.BEACH)) {
+                    return TeraMath.clamp(.8f + modifier, 0, 1);
+                } else if (currentBiome.equals(CoreBiome.FOREST)) {
+                    return TeraMath.clamp(.7f + modifier, 0, 1);
+                } else if (currentBiome.equals(CoreBiome.PLAINS)) {
+                    return TeraMath.clamp(.55f + modifier, 0, 1);
+                } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
+                    return TeraMath.clamp(.3f + modifier, 0, 1);
+                } else if (currentBiome.equals(CoreBiome.DESERT)) {
+                    return TeraMath.clamp(.15f + modifier, 0, 1);
+                } else {
+                    return TeraMath.clamp(noise + modifier, 0, 1);
+                }
+            }
+        }
+        return -1;
     }
 }

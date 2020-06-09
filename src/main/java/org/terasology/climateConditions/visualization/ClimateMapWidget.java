@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2020 MovingBlocks
  *
@@ -26,7 +27,7 @@ import org.terasology.rendering.nui.CoreWidget;
 import static org.terasology.climateConditions.visualization.ShowMapCommand.SIZE_OF_IMAGE;
 
 public class ClimateMapWidget extends CoreWidget {
-    private ClimateMapDisplaySystem climateSystem;
+    private ShowMapCommand climateSystem;
 
     /**
      * Converts the base climate condition values to a color, and draws them on the canvas.
@@ -40,10 +41,20 @@ public class ClimateMapWidget extends CoreWidget {
                 for (int j = 0; j < SIZE_OF_IMAGE; j++) {
                     Vector3f playerPosition = climateSystem.getPlayer().getPosition();
                     int height = climateSystem.getMapHeight();
-                    int offsetZ =  - (SIZE_OF_IMAGE / 2) + j;
                     int offsetX = - (SIZE_OF_IMAGE / 2) + i;
-                    float color = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
-                    canvas.drawLine(i, j, i + 1, j + 1, new Color(color, color, color));
+                    int offsetZ = - (SIZE_OF_IMAGE / 2) + j;
+
+                    if (climateSystem.getClimateConditionsBase() != null) {
+                        boolean negativeOne = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, false) == -1;
+                        float color = (climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, true));
+                        if (!negativeOne) {
+                            canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), new Color(color, color, color));
+                        } else {
+                            canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), Color.RED);
+                        }
+                    } else {
+
+                    }
                 }
             }
         }
@@ -51,10 +62,10 @@ public class ClimateMapWidget extends CoreWidget {
 
     @Override
     public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {
-        return new Vector2i(SIZE_OF_IMAGE, SIZE_OF_IMAGE);
+        return new Vector2i(SIZE_OF_IMAGE * 10, SIZE_OF_IMAGE * 10);
     }
 
-    public void setShowMapCommand(ClimateMapDisplaySystem command) {
-        climateSystem = command;
+    public void setClimateSystem(ShowMapCommand system) {
+        climateSystem = system;
     }
 }

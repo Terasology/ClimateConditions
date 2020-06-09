@@ -16,31 +16,36 @@
 
 package org.terasology.climateConditions.visualization;
 
-import com.google.common.base.Function;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionsBaseField;
-import org.terasology.context.Context;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
 import org.terasology.logic.console.commandSystem.annotations.CommandParam;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
+import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.world.WorldProvider;
 
+import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
+
+@Share(ShowMapCommand.class)
 @RegisterSystem
 public class ShowMapCommand extends BaseComponentSystem {
-    public static final int SIZE_OF_IMAGE = 300;
-
-    @In
-    ClimateMapDisplaySystem climateSystem;
+    public static final int SIZE_OF_IMAGE = 30;
 
     @In
     private ClimateConditionsSystem climateConditions;
-
+    @In
+    private LocalPlayer localPlayer;
     @In
     private NUIManager nuiManager;
+    @In
+    private WorldProvider worldProvider;
+
+    private ConditionsBaseField base;
+    private int mapHeight;
 
     /**
      * Displays the selected map at the selected height level.
@@ -48,16 +53,40 @@ public class ShowMapCommand extends BaseComponentSystem {
      * The lighter a pixel on the map, the higher temperature/humidity/whatever else.
      * @param mapType
      */
-    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) at a given height level.")
-    public void showClimateMap(@CommandParam("map type") String mapType, @CommandParam("height to look at") int height) {
-        climateSystem.setMapHeight(height);
+    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) around the player.")
+    public void showClimateMap(@CommandParam("map type") String mapType) {
+        mapHeight = (int) localPlayer.getPosition().y;
 
-        if (mapType.equals("temperature")) {
-            climateSystem.setClimateConditionsBase(climateConditions.getTemperatureBaseField());
+        if (climateConditions.getWorldSeed() == null) {
+            setClimateSeed();
+        }
+        if (climateConditions.getTemperatureBaseField() == null) {
+            climateConditions.configureTemperature();
+        }
+        if (climateConditions.getHumidityBaseField() == null) {
+            climateConditions.configureHumidity();
+        }
+
+        if (mapType.equals(TEMPERATURE)) {
+            base = climateConditions.getTemperatureBaseField();
         } else {
-            climateSystem.setClimateConditionsBase(climateConditions.getHumidityBaseField());
+            base = climateConditions.getHumidityBaseField();
         }
 
         nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
+    }
+
+    private void setClimateSeed() {
+        climateConditions.setWorldSeed(worldProvider.getSeed());
+    }
+
+    public ConditionsBaseField getClimateConditionsBase() {
+        return base;
+    }
+    public LocalPlayer getPlayer() {
+        return localPlayer;
+    }
+    public int getMapHeight() {
+        return mapHeight;
     }
 }

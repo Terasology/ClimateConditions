@@ -1,5 +1,6 @@
 package org.terasology.climateConditions.visualization;
 
+import org.terasology.biomesAPI.BiomeRegistry;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionsBaseField;
 import org.terasology.context.Context;
@@ -7,13 +8,13 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.rendering.nui.NUIManager;
 import org.terasology.world.WorldProvider;
 
-@Share(ClimateMapDisplaySystem.class)
+import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
+
 @RegisterSystem
 public class ClimateMapDisplaySystem extends BaseComponentSystem {
+
     @In
     private ClimateConditionsSystem climateConditions;
     @In
@@ -22,6 +23,8 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     private Context context;
     @In
     private WorldProvider worldProvider;
+    @In
+    private BiomeRegistry biomeManager;
 
     private ConditionsBaseField base;
     private int mapHeight;
@@ -34,10 +37,10 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
         setClimateSeed();
 
         if (climateConditions.getHumidityBaseField() == null) {
-            climateConditions.configureHumidity(0, 200, 10, input -> input, 0, 1);
+            climateConditions.configureHumidity(0, 10, 0, 1, worldProvider, biomeManager);
         }
         if (climateConditions.getTemperatureBaseField() == null) {
-            climateConditions.configureTemperature(0, 200, 10, input -> input, 0, 1);
+            climateConditions.configureTemperature(0, 10, 0, 1, worldProvider, biomeManager);
         }
     }
 
@@ -48,7 +51,13 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     public ConditionsBaseField getClimateConditionsBase() {
         return base;
     }
-    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) { base = conditionsBase; }
+    public void setClimateConditionsBase(String typeOfBase) {
+        if (typeOfBase.equals(TEMPERATURE)) {
+            base = climateConditions.getTemperatureBaseField();
+        } else {
+            base = climateConditions.getHumidityBaseField();
+        }
+    }
     public void setMapHeight(int height) { mapHeight = height; }
     public LocalPlayer getPlayer() {
         return localPlayer;
