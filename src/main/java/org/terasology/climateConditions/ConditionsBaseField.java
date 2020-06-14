@@ -71,35 +71,35 @@ public class ConditionsBaseField {
     /**
      * Gets the temperature at a given location.
      *
-     * Returns the temperature as a value between 0 and 1.
+     * Returns the temperature as a decimal value in Celsius, where 1 == 100 degrees and 0 == 0 degrees
      */
     private float getTemperature(Vector3i position, float noise) {
         if (position.y <= seaLevel) {
             return temperatureBase;
         } else {
-            // The higher above sea level - the colder (changes .6-1 degrees C per 100 ft change)
-            // Temperature decreased by the height above sea level times .005 as an approximation
-            float modifier = temperatureBase * (1 + noise) - (position.y - seaLevel) * .005f;
+            // The higher above sea level - the colder (changes ~.03 degrees C per 1 meter change)
+            // Temperature decreased by the height above sea level times .00003 as an approximation
+            float modifier = temperatureBase * (1 + noise * .05f) - (position.y - seaLevel) * .00003f + .07f;
             Block currentBlock = worldProvider.getBlock(position);
             if (currentBlock != null && biomeManager.getBiome(position).isPresent()) {
                 Biome currentBiome = biomeManager.getBiome(position).get();
 
                 // Block-by-block modification
                 if (currentBlock.getDisplayName().contains("Lava")) {
-                    modifier += 1;
+                    modifier += 12;
                 }
                 // Biome-by-biome modification
                 if (currentBiome.equals(CoreBiome.DESERT)) {
-                    modifier += .3;
+                    modifier += .1;
                 } else if (currentBiome.equals(CoreBiome.SNOW)) {
-                    modifier -= .6;
+                    modifier -= .25;
                 } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
                     modifier -= .1;
                 }
                 return modifier;
             }
         }
-        return -1;
+        return -100;
     }
 
     /**
@@ -135,6 +135,6 @@ public class ConditionsBaseField {
                 }
             }
         }
-        return -1;
+        return -100;
     }
 }

@@ -67,7 +67,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureTemperature() {
-        configureTemperature(0, 10,0, 1, world, biome);
+        configureTemperature(0, 10,-10, 10, world, biome);
     }
 
     public void configureHumidity() {
@@ -79,7 +79,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
 
-        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, seaLevel, noiseMultiplier, .55f,
+        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, seaLevel, noiseMultiplier, .22f,
                 seed + 582374, block, biome, world);
 
         temperatureMinimum = minimumValue;

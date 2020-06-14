@@ -45,9 +45,9 @@ public class ClimateMapWidget extends CoreWidget {
                     int offsetZ = - (SIZE_OF_IMAGE / 2) + j;
 
                     if (climateSystem.getClimateConditionsBase() != null) {
-                        boolean negativeOne = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, false) == -1;
+                        boolean negativeOneHundred = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, false) == -100;
                         float color = (climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, true));
-                        if (!negativeOne) {
+                        if (!negativeOneHundred) {
                             canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), new Color(color, color, color));
                         } else {
                             canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), Color.RED);
