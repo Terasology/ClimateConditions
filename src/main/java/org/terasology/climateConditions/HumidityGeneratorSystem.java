@@ -16,6 +16,7 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
+import org.terasology.biomesAPI.Biome;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
@@ -24,8 +25,13 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.ImmutableBlockLocation;
+import org.terasology.math.TeraMath;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
+import org.terasology.core.world.CoreBiome;
+
 
 import java.util.Map;
 
@@ -39,12 +45,43 @@ public class HumidityGeneratorSystem extends BaseComponentSystem {
     @Override
     public void preBegin() {
         environmentSystem.addHumidityModifier(1000,
-                new ConditionModifier() {
-                    @Override
-                    public float getCondition(float value, float x, float y, float z) {
-                        return getValue(value, x, y, z);
+            new ConditionModifier() {
+                @Override
+                public float getCondition(float value, float x, float y, float z) {
+                    Vector3i position = new Vector3i(x, y, z);
+                    //Perfectly humid if the block is water
+                    Block currentBlock = environmentSystem.getWorld().getBlock(position);
+                    if (currentBlock != null) {
+                        if (currentBlock.getDisplayName().contains("Water")) {
+                            return 1;
+                        }
                     }
-                });
+                    // Reduce humidity (humidity = relative humidity) when temperature is higher
+                    float modifier = (environmentSystem.temperatureBase - environmentSystem.getTemperature(x,
+                            y, z)) * .05f * (1 + value);
+
+                    if (environmentSystem.getBiome().getBiome(position).isPresent()) {
+                        // Different biomes indicate different humidities
+                        Biome currentBiome = environmentSystem.getBiome().getBiome(position).get();
+                        if (currentBiome.equals(CoreBiome.OCEAN) || currentBiome.equals(CoreBiome.SNOW)) {
+                            return TeraMath.clamp(.9f + modifier, 0, 1);
+                        } else if (currentBiome.equals(CoreBiome.BEACH)) {
+                            return TeraMath.clamp(.8f + modifier, 0, 1);
+                        } else if (currentBiome.equals(CoreBiome.FOREST)) {
+                            return TeraMath.clamp(.7f + modifier, 0, 1);
+                        } else if (currentBiome.equals(CoreBiome.PLAINS)) {
+                            return TeraMath.clamp(.55f + modifier, 0, 1);
+                        } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
+                            return TeraMath.clamp(.3f + modifier, 0, 1);
+                        } else if (currentBiome.equals(CoreBiome.DESERT)) {
+                            return TeraMath.clamp(.15f + modifier, 0, 1);
+                        } else {
+                            return TeraMath.clamp(value + modifier, 0, 1);
+                        }
+                    }
+                    return -1000;
+                }
+            });
     }
 
     @ReceiveEvent

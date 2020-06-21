@@ -28,6 +28,9 @@ import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
 import org.terasology.world.WorldProvider;
 
+import java.util.function.Function;
+
+import static org.terasology.climateConditions.ConditionsBaseField.HUMIDITY;
 import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
 
 @Share(ShowMapCommand.class)
@@ -44,7 +47,7 @@ public class ShowMapCommand extends BaseComponentSystem {
     @In
     private WorldProvider worldProvider;
 
-    private ConditionsBaseField base;
+    private String type;
     private int mapHeight;
 
     private void prepareBases(String mapType) {
@@ -61,9 +64,9 @@ public class ShowMapCommand extends BaseComponentSystem {
         }
 
         if (mapType.equals(TEMPERATURE)) {
-            base = climateConditions.getTemperatureBaseField();
+            type = TEMPERATURE;
         } else {
-            base = climateConditions.getHumidityBaseField();
+            type = HUMIDITY;
         }
     }
 
@@ -90,15 +93,19 @@ public class ShowMapCommand extends BaseComponentSystem {
     public float climateValue(@CommandParam("map type") String mapType) {
         prepareBases(mapType);
 
-        return base.get(localPlayer.getPosition().x, localPlayer.getPosition().y, localPlayer.getPosition().z, false);
+        if (type.equals(TEMPERATURE)) {
+            return climateConditions.getTemperature(localPlayer.getPosition().x, localPlayer.getPosition().y, localPlayer.getPosition().z);
+        } else {
+            return -1000;
+        }
     }
 
     private void setClimateSeed() {
         climateConditions.setWorldSeed(worldProvider.getSeed());
     }
 
-    public ConditionsBaseField getClimateConditionsBase() {
-        return base;
+    public ClimateConditionsSystem getClimateConditions() {
+        return climateConditions;
     }
     public LocalPlayer getPlayer() {
         return localPlayer;
@@ -106,4 +113,5 @@ public class ShowMapCommand extends BaseComponentSystem {
     public int getMapHeight() {
         return mapHeight;
     }
+    public String getType() { return type; }
 }

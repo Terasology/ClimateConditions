@@ -16,6 +16,7 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
+import org.terasology.biomesAPI.Biome;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
@@ -24,7 +25,10 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.ImmutableBlockLocation;
+import org.terasology.core.world.CoreBiome;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
 
 import java.util.Map;
@@ -42,7 +46,37 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
                 new ConditionModifier() {
                     @Override
                     public float getCondition(float value, float x, float y, float z) {
-                        return getValue(value, x, y, z);
+                        Vector3i position = new Vector3i(x, y, z);
+                        if (y <= environmentSystem.seaLevel) {
+                            return environmentSystem.temperatureBase;
+                        } else {
+                            // The higher above sea level - the colder (changes ~.03 degrees C per 1 meter change)
+                            // Temperature decreased by the height above sea level times .00006 as an exaggerated approximation
+                            float modifier = environmentSystem.temperatureBase * (1 + value * .07f) - (position.y - environmentSystem.seaLevel) * .00006f + .07f;
+                            Block currentBlock = environmentSystem.getWorld().getBlock(position);
+                            if (currentBlock != null && environmentSystem.getBiome().getBiome(position).isPresent()) {
+                                Biome currentBiome = environmentSystem.getBiome().getBiome(position).get();
+
+                                // Block-by-block modification
+                                if (currentBlock.getDisplayName().contains("Lava")) {
+                                    modifier += 12;
+                                }
+                                // Biome-by-biome modification
+                                if (currentBiome.equals(CoreBiome.DESERT)) {
+                                    modifier += .05;
+                                } else if (currentBiome.equals(CoreBiome.SNOW) ||
+                                        ((currentBiome.equals(CoreBiome.PLAINS) || currentBiome.equals(CoreBiome.FOREST)
+                                                || currentBiome.equals(CoreBiome.MOUNTAINS)) && position.y > 96 + environmentSystem.seaLevel)) {
+                                    modifier -= .30;
+                                } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
+                                    modifier -= .15;
+                                } else if (currentBiome.equals(CoreBiome.OCEAN)) {
+                                    modifier -= .1;
+                                }
+                                return modifier;
+                            }
+                        }
+                        return -1000;
                     }
                 });
     }

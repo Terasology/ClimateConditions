@@ -48,21 +48,8 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
         climateConditions.setWorldSeed(worldProvider.getSeed());
     }
 
-    public ConditionsBaseField getClimateConditionsBase() {
-        return base;
-    }
-    public void setClimateConditionsBase(String typeOfBase) {
-        if (typeOfBase.equals(TEMPERATURE)) {
-            base = climateConditions.getTemperatureBaseField();
-        } else {
-            base = climateConditions.getHumidityBaseField();
-        }
-    }
-    public void setMapHeight(int height) { mapHeight = height; }
+    public ClimateConditionsSystem getClimateConditions() { return climateConditions; }
     public LocalPlayer getPlayer() {
         return localPlayer;
-    }
-    public int getMapHeight() {
-        return mapHeight;
     }
 }

@@ -52,6 +52,10 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     private float humidityMinimum;
     private float humidityMaximum;
 
+    float temperatureBase = .22f;
+    float humidityBase = .3f;
+    float seaLevel;
+
     private String worldSeed;
 
     public void setWorldSeed(String worldSeed){
@@ -67,11 +71,11 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureTemperature() {
-        configureTemperature(0, 10,-10, 10, world, biome);
+        configureTemperature(32, 10,-10, 10, world, biome);
     }
 
     public void configureHumidity() {
-        configureHumidity(0, 10, 0, 1, world, biome);
+        configureHumidity(32, 10, 0, 1, world, biome);
     }
 
     public void configureTemperature(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
@@ -79,11 +83,12 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
 
-        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, seaLevel, noiseMultiplier, .22f,
-                seed + 582374, block, biome, world);
+        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, noiseMultiplier, seed + 582374);
 
         temperatureMinimum = minimumValue;
         temperatureMaximum = maximumValue;
+
+        this.seaLevel = seaLevel;
     }
 
     public void configureHumidity(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
@@ -91,11 +96,12 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
 
-        humidityBaseField = new ConditionsBaseField(ConditionsBaseField.HUMIDITY, seaLevel, noiseMultiplier, .3f,
-                seed + 129534, block, biome, world);
+        humidityBaseField = new ConditionsBaseField(ConditionsBaseField.HUMIDITY, noiseMultiplier, seed + 582374);
 
         humidityMinimum = minimumValue;
         humidityMaximum = maximumValue;
+
+        this.seaLevel = seaLevel;
     }
 
     public ConditionsBaseField getHumidityBaseField() {
@@ -133,4 +139,6 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     public String getWorldSeed() {
         return worldSeed;
     }
+    public BiomeRegistry getBiome() { return biome; }
+    public WorldProvider getWorld() { return world; }
 }

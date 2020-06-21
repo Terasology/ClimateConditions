@@ -24,6 +24,7 @@ import org.terasology.rendering.nui.Canvas;
 import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.nui.CoreWidget;
 
+import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
 import static org.terasology.climateConditions.visualization.ShowMapCommand.SIZE_OF_IMAGE;
 
 public class ClimateMapWidget extends CoreWidget {
@@ -44,16 +45,18 @@ public class ClimateMapWidget extends CoreWidget {
                     int offsetX = - (SIZE_OF_IMAGE / 2) + i;
                     int offsetZ = - (SIZE_OF_IMAGE / 2) + j;
 
-                    if (climateSystem.getClimateConditionsBase() != null) {
-                        boolean negativeOneHundred = climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, false) == -100;
-                        float color = (climateSystem.getClimateConditionsBase().get(playerPosition.x + offsetX, height, playerPosition.z + offsetZ, true));
-                        if (!negativeOneHundred) {
-                            canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), new Color(color, color, color));
-                        } else {
-                            canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), Color.RED);
-                        }
+                    float value = 0;
+                    if (climateSystem.getType().equals(TEMPERATURE)) {
+                        value = climateSystem.getClimateConditions().getTemperature(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
                     } else {
-
+                        value = climateSystem.getClimateConditions().getHumidity(playerPosition.x + offsetX, height, playerPosition.z + offsetZ);
+                    }
+                    boolean negativeOneHundred = value < -100;
+                    float color = Math.min(Math.max(value, 0), 1);
+                    if (!negativeOneHundred) {
+                        canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), new Color(color, color, color));
+                    } else {
+                        canvas.drawFilledRectangle(Rect2i.createFromMinAndSize(i * 10, j * 10, 10, 10), Color.RED);
                     }
                 }
             }
