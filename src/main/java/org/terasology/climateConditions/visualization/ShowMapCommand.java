@@ -47,14 +47,7 @@ public class ShowMapCommand extends BaseComponentSystem {
     private ConditionsBaseField base;
     private int mapHeight;
 
-    /**
-     * Displays the selected map at the selected height level.
-     *
-     * The lighter a pixel on the map, the higher temperature/humidity/whatever else.
-     * @param mapType
-     */
-    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) around the player.")
-    public void showClimateMap(@CommandParam("map type") String mapType) {
+    private void prepareBases(String mapType) {
         mapHeight = (int) localPlayer.getPosition().y;
 
         if (climateConditions.getWorldSeed() == null) {
@@ -72,8 +65,32 @@ public class ShowMapCommand extends BaseComponentSystem {
         } else {
             base = climateConditions.getHumidityBaseField();
         }
+    }
+
+    /**
+     * Displays the selected map at the selected height level.
+     *
+     * The lighter a pixel on the map, the higher temperature/humidity/whatever else.
+     * @param mapType
+     */
+    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) around the player.")
+    public void showClimateMap(@CommandParam("map type") String mapType) {
+        prepareBases(mapType);
 
         nuiManager.pushScreen("ClimateConditions:displayConditionScreen");
+    }
+
+    /**
+     * Gives the current temperature/humidity/etc. level at the player's position.
+     *
+     * @param mapType
+     * @return condition value
+     */
+    @Command(shortDescription = "Give condition value", helpText = "Gives the temperature/humidity/etc. of the player at this moment.")
+    public float climateValue(@CommandParam("map type") String mapType) {
+        prepareBases(mapType);
+
+        return base.get(localPlayer.getPosition().x, localPlayer.getPosition().y, localPlayer.getPosition().z, false);
     }
 
     private void setClimateSeed() {

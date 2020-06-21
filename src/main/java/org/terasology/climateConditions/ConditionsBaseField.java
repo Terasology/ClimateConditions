@@ -78,8 +78,8 @@ public class ConditionsBaseField {
             return temperatureBase;
         } else {
             // The higher above sea level - the colder (changes ~.03 degrees C per 1 meter change)
-            // Temperature decreased by the height above sea level times .00003 as an approximation
-            float modifier = temperatureBase * (1 + noise * .05f) - (position.y - seaLevel) * .00003f + .07f;
+            // Temperature decreased by the height above sea level times .00006 as an exaggerated approximation
+            float modifier = temperatureBase * (1 + noise * .07f) - (position.y - seaLevel) * .00006f + .07f;
             Block currentBlock = worldProvider.getBlock(position);
             if (currentBlock != null && biomeManager.getBiome(position).isPresent()) {
                 Biome currentBiome = biomeManager.getBiome(position).get();
@@ -90,10 +90,14 @@ public class ConditionsBaseField {
                 }
                 // Biome-by-biome modification
                 if (currentBiome.equals(CoreBiome.DESERT)) {
-                    modifier += .1;
-                } else if (currentBiome.equals(CoreBiome.SNOW)) {
-                    modifier -= .25;
+                    modifier += .05;
+                } else if (currentBiome.equals(CoreBiome.SNOW) ||
+                        ((currentBiome.equals(CoreBiome.PLAINS) || currentBiome.equals(CoreBiome.FOREST)
+                                || currentBiome.equals(CoreBiome.MOUNTAINS)) && position.y > 96 + seaLevel)) {
+                    modifier -= .30;
                 } else if (currentBiome.equals(CoreBiome.MOUNTAINS)) {
+                    modifier -= .15;
+                } else if (currentBiome.equals(CoreBiome.OCEAN)) {
                     modifier -= .1;
                 }
                 return modifier;
