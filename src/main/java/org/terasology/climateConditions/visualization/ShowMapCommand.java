@@ -96,7 +96,7 @@ public class ShowMapCommand extends BaseComponentSystem {
         if (type.equals(TEMPERATURE)) {
             return climateConditions.getTemperature(localPlayer.getPosition().x, localPlayer.getPosition().y, localPlayer.getPosition().z);
         } else {
-            return -1000;
+            return climateConditions.getHumidity(localPlayer.getPosition().x, localPlayer.getPosition().y, localPlayer.getPosition().z);
         }
     }
 

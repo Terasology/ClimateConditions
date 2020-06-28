@@ -71,7 +71,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureTemperature() {
-        configureTemperature(32, 10,-10, 10, world, biome);
+        configureTemperature(32, 10, -10, 10, world, biome);
     }
 
     public void configureHumidity() {
