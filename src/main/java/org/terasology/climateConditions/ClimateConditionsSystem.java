@@ -71,14 +71,14 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureTemperature() {
-        configureTemperature(32, 10, -10, 10, world, biome);
+        configureTemperature(32, 10, -10, 10);
     }
 
     public void configureHumidity() {
-        configureHumidity(32, 10, 0, 1, world, biome);
+        configureHumidity(32, 10, 0, 1);
     }
 
-    public void configureTemperature(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
+    public void configureTemperature(int seaLevel, float diversity, float minimumValue, float maximumValue) {
         int seed = worldSeed.hashCode();
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
@@ -91,7 +91,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
         this.seaLevel = seaLevel;
     }
 
-    public void configureHumidity(int seaLevel, float diversity, float minimumValue, float maximumValue, WorldProvider world, BiomeRegistry biome) {
+    public void configureHumidity(int seaLevel, float diversity, float minimumValue, float maximumValue) {
         int seed = worldSeed.hashCode();
 
         float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;

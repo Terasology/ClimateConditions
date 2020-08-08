@@ -23,8 +23,6 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     private Context context;
     @In
     private WorldProvider worldProvider;
-    @In
-    private BiomeRegistry biomeManager;
 
     private ConditionsBaseField base;
     private int mapHeight;
@@ -37,10 +35,10 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
         setClimateSeed();
 
         if (climateConditions.getHumidityBaseField() == null) {
-            climateConditions.configureHumidity(0, 10, 0, 1, worldProvider, biomeManager);
+            climateConditions.configureHumidity(0, 10, 0, 1);
         }
         if (climateConditions.getTemperatureBaseField() == null) {
-            climateConditions.configureTemperature(0, 10, 0, 1, worldProvider, biomeManager);
+            climateConditions.configureTemperature(0, 10, 0, 1);
         }
     }
 

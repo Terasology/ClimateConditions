@@ -16,6 +16,7 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
+import org.slf4j.LoggerFactory;
 import org.terasology.biomesAPI.Biome;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
@@ -28,9 +29,11 @@ import org.terasology.logic.location.ImmutableBlockLocation;
 import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.WorldProvider;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.BlockManager;
+import org.terasology.world.chunks.blockdata.ExtraBlockDataManager;
 
 
 import java.util.Map;
@@ -41,6 +44,8 @@ public class HumidityGeneratorSystem extends BaseComponentSystem {
     private ClimateConditionsSystem environmentSystem;
     @In
     private BlockManager blockManager;
+    @In
+    private WorldProvider worldProvider;
 
     private Map<ImmutableBlockLocation, HumidityGeneratorComponent> activeComponents = Maps.newHashMap();
 
@@ -51,23 +56,7 @@ public class HumidityGeneratorSystem extends BaseComponentSystem {
                 @Override
                 public float getCondition(float value, float x, float y, float z) {
                     Vector3i position = new Vector3i(x, y, z);
-                    //Perfectly humid if the block is water
-                    Block currentBlock = environmentSystem.getWorld().getBlock(position);
-                    if (currentBlock != null) {
-                        if (currentBlock.equals(blockManager.getBlock("CoreAssets:water"))) {
-                            return 1;
-                        }
-                    }
-                    // Reduce humidity (humidity = relative humidity) when temperature is higher
-                    float modifier = (environmentSystem.temperatureBase - environmentSystem.getTemperature(x,
-                            y, z)) * .1f * value;
-
-                    if (environmentSystem.getBiome().getBiome(position).isPresent()) {
-                        // Different biomes indicate different humidities
-                        Biome currentBiome = environmentSystem.getBiome().getBiome(position).get();
-                        return TeraMath.clamp(currentBiome.getHumidity() + modifier, 0, 1);
-                    }
-                    return -1000;
+                    return ((float) worldProvider.getExtraData("coreWorlds.humidity", position)) / 1000;
                 }
             });
     }
