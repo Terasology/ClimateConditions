@@ -16,13 +16,18 @@
 package org.terasology.climateConditions;
 
 import org.terasology.math.TeraMath;
+import org.terasology.math.geom.Vector3i;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.utilities.procedural.SimplexNoise;
+import org.terasology.world.WorldProvider;
 
 public class ConditionsBaseField {
 
     @In
     ClimateConditionsSystem climateConditionsSystem;
+    @In
+    WorldProvider worldProvider;
 
     public static final String TEMPERATURE = "temperature";
     public static final String HUMIDITY = "humidity";
@@ -35,18 +40,22 @@ public class ConditionsBaseField {
         this.type = type;
         this.noiseMultiplier = noiseMultiplier;
         noiseTable = new SimplexNoise(conditionSeed);
+        worldProvider = CoreRegistry.get(WorldProvider.class);
     }
 
-    //TODO: see where this is used and replace with ClimateConditionsSystem's getTemperature/getHumidity
     public float get(float x, float y, float z, boolean clamp) {
         if (clamp) {
-            return TeraMath.clamp(getConditionAlpha(x, y, z), 0, 1);
+            return TeraMath.clamp(getConditionAlpha(x, y, z), 0f, 1f);
         } else {
             return getConditionAlpha(x, y, z);
         }
     }
 
     private float getConditionAlpha(float x, float y, float z) {
-        return noiseTable.noise(x * noiseMultiplier, z * noiseMultiplier);
+        if (type.equals(TEMPERATURE)) {
+            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .00006f * y;
+        } else {
+            return ((float) worldProvider.getExtraData("coreWorlds.humidity", new Vector3i(x, y, z))) / 1000;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package org.terasology.climateConditions.visualization;
 
-import org.terasology.biomesAPI.BiomeRegistry;
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionsBaseField;
 import org.terasology.context.Context;
@@ -9,8 +8,6 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
 import org.terasology.world.WorldProvider;
-
-import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
 
 @RegisterSystem
 public class ClimateMapDisplaySystem extends BaseComponentSystem {

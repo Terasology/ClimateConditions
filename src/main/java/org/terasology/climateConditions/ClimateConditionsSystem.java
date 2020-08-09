@@ -36,8 +36,6 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     @In
     private BlockManager block;
     @In
-    private BiomeRegistry biome;
-    @In
     private WorldProvider world;
 
     private ConditionsBaseField temperatureBaseField;
@@ -52,8 +50,6 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     private float humidityMinimum;
     private float humidityMaximum;
 
-    float temperatureBase = .22f;
-    float humidityBase = .3f;
     float seaLevel;
 
     private String worldSeed;
@@ -113,32 +109,15 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public float getTemperature(float x, float y, float z) {
-        float value = temperatureBaseField.get(x, y, z, true);
-
-        value = temperatureMinimum + value * (temperatureMaximum - temperatureMinimum);
-
-        for (ConditionModifier temperatureModifier : temperatureModifiers.values()) {
-            value = temperatureModifier.getCondition(value, x, y, z);
-        }
-
-        return value;
+        return temperatureBaseField.get(x, y, z, true);
     }
 
     public float getHumidity(float x, float y, float z) {
-        float value = humidityBaseField.get(x, y, z, true);
-
-        value = humidityMinimum + value * (humidityMaximum - humidityMinimum);
-
-        for (ConditionModifier humidityModifier : humidityModifiers.values()) {
-            value = humidityModifier.getCondition(value, x, y, z);
-        }
-
-        return value;
+        return humidityBaseField.get(x, y, z, true);
     }
 
     public String getWorldSeed() {
         return worldSeed;
     }
-    public BiomeRegistry getBiome() { return biome; }
     public WorldProvider getWorld() { return world; }
 }

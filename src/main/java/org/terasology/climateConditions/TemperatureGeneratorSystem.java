@@ -16,9 +16,6 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
-import org.slf4j.LoggerFactory;
-import org.terasology.biomesAPI.Biome;
-import org.terasology.entitySystem.entity.internal.WorldManager;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
@@ -27,14 +24,11 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.ImmutableBlockLocation;
-import org.terasology.core.world.CoreBiome;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
 import org.terasology.world.WorldProvider;
-import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.BlockManager;
-import org.terasology.world.generator.internal.WorldGeneratorManager;
 
 import java.util.Map;
 
@@ -56,7 +50,8 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
                     @Override
                     public float getCondition(float value, float x, float y, float z) {
                         Vector3i position = new Vector3i(x, y, z);
-                        return ((float) worldProvider.getExtraData("coreWorlds.temperature", position)) / 1000;
+                        float temp = ((float) worldProvider.getExtraData("coreWorlds.temperature", position)) / 1000;
+                        return temp - (position.y * .000006f); // adjusts based on height
                     }
                 });
     }
