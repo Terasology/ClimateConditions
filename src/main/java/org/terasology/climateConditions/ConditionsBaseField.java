@@ -53,7 +53,7 @@ public class ConditionsBaseField {
 
     private float getConditionAlpha(float x, float y, float z) {
         if (type.equals(TEMPERATURE)) {
-            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .00006f * y;
+            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .0006f * y;
         } else {
             return ((float) worldProvider.getExtraData("coreWorlds.humidity", new Vector3i(x, y, z))) / 1000;
         }
