@@ -21,6 +21,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
+import org.terasology.math.geom.Vector3f;
 import org.terasology.registry.Share;
 import org.terasology.world.WorldProvider;
 import org.terasology.world.block.BlockManager;
@@ -54,7 +55,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
     private String worldSeed;
 
-    public void setWorldSeed(String worldSeed){
+    public void setWorldSeed(String worldSeed) {
         this.worldSeed = worldSeed;
     }
 
@@ -114,6 +115,14 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
 
     public float getHumidity(float x, float y, float z) {
         return humidityBaseField.get(x, y, z, true);
+    }
+
+    public float getTemperature(Vector3f position) {
+        return getTemperature(position.getX(), position.getY(), position.getZ());
+    }
+
+    public float getHumidity(Vector3f position) {
+        return getHumidity(position.getX(), position.getY(), position.getZ());
     }
 
     public String getWorldSeed() {
