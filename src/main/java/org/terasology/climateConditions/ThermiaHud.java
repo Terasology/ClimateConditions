@@ -3,10 +3,11 @@
 
 package org.terasology.climateConditions;
 
+import org.terasology.nui.widgets.UIImage;
+import org.terasology.nui.widgets.UILabel;
 import org.terasology.rendering.assets.texture.TextureRegion;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
-import org.terasology.rendering.nui.widgets.UIImage;
-import org.terasology.rendering.nui.widgets.UILabel;
+
 
 /**
  * The UI class for the Thermia HUD used to convey extreme body temperatures.
