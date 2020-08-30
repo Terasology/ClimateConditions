@@ -33,13 +33,9 @@ public class ConditionsBaseField {
     public static final String HUMIDITY = "humidity";
 
     private String type;
-    private SimplexNoise noiseTable;
-    private float noiseMultiplier;
 
-    public ConditionsBaseField(String type, float noiseMultiplier, long conditionSeed) {
+    public ConditionsBaseField(String type) {
         this.type = type;
-        this.noiseMultiplier = noiseMultiplier;
-        noiseTable = new SimplexNoise(conditionSeed);
         worldProvider = CoreRegistry.get(WorldProvider.class);
     }
 
@@ -53,7 +49,7 @@ public class ConditionsBaseField {
 
     private float getConditionAlpha(float x, float y, float z) {
         if (type.equals(TEMPERATURE)) {
-            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .0006f * y;
+            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .001f * y;
         } else {
             return ((float) worldProvider.getExtraData("coreWorlds.humidity", new Vector3i(x, y, z))) / 1000;
         }

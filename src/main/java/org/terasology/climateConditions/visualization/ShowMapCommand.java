@@ -36,7 +36,7 @@ import static org.terasology.climateConditions.ConditionsBaseField.TEMPERATURE;
 @Share(ShowMapCommand.class)
 @RegisterSystem
 public class ShowMapCommand extends BaseComponentSystem {
-    public static final int SIZE_OF_IMAGE = 30;
+    public static final int SIZE_OF_IMAGE_IN_BLOCKS = 30;
 
     @In
     private ClimateConditionsSystem climateConditions;

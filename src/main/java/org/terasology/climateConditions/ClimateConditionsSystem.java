@@ -31,9 +31,6 @@ import java.util.Map;
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 @Share(value = ClimateConditionsSystem.class)
 public class ClimateConditionsSystem extends BaseComponentSystem {
-    private final float minMultiplier = 0.0005f;
-    private final float maxMultiplier = 0.01f;
-
     @In
     private BlockManager block;
     @In
@@ -76,11 +73,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureTemperature(int seaLevel, float diversity, float minimumValue, float maximumValue) {
-        int seed = worldSeed.hashCode();
-
-        float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
-
-        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE, noiseMultiplier, seed + 582374);
+        temperatureBaseField = new ConditionsBaseField(ConditionsBaseField.TEMPERATURE);
 
         temperatureMinimum = minimumValue;
         temperatureMaximum = maximumValue;
@@ -89,11 +82,7 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
     }
 
     public void configureHumidity(int seaLevel, float diversity, float minimumValue, float maximumValue) {
-        int seed = worldSeed.hashCode();
-
-        float noiseMultiplier = minMultiplier + (maxMultiplier - minMultiplier) * diversity;
-
-        humidityBaseField = new ConditionsBaseField(ConditionsBaseField.HUMIDITY, noiseMultiplier, seed + 582374);
+        humidityBaseField = new ConditionsBaseField(ConditionsBaseField.HUMIDITY);
 
         humidityMinimum = minimumValue;
         humidityMaximum = maximumValue;
