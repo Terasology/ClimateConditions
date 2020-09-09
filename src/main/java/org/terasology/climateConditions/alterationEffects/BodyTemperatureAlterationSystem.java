@@ -1,4 +1,3 @@
-
 // Copyright 2020 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,15 +7,15 @@ import org.terasology.alterationEffects.AlterationEffect;
 import org.terasology.alterationEffects.AlterationEffects;
 import org.terasology.alterationEffects.OnEffectRemoveEvent;
 import org.terasology.climateConditions.AffectBodyTemperatureEvent;
-import org.terasology.context.Context;
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.delay.DelayedActionTriggeredEvent;
-import org.terasology.registry.In;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.delay.DelayedActionTriggeredEvent;
+import org.terasology.engine.registry.In;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,18 +27,16 @@ import java.util.regex.Pattern;
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class BodyTemperatureAlterationSystem extends BaseComponentSystem {
 
-    @In
-    Context context;
-
     /**
      * This will store the mapping of the effect constants to the effect components.
      */
-    private Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
-
+    private final Map<String, Class<? extends Component>> effectComponents = new HashMap<>();
     /**
      * This will store the mapping of the effect constants to the alteration effects.
      */
-    private Map<String, AlterationEffect> alterationEffects = new HashMap<>();
+    private final Map<String, AlterationEffect> alterationEffects = new HashMap<>();
+    @In
+    Context context;
 
     @Override
     public void initialise() {

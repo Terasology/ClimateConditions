@@ -3,38 +3,38 @@
 
 package org.terasology.climateConditions.igloo;
 
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.math.ChunkMath;
-import org.terasology.math.Region3i;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.prefab.PrefabManager;
+import org.terasology.engine.math.ChunkMath;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.block.Block;
+import org.terasology.engine.world.chunks.CoreChunk;
+import org.terasology.engine.world.generation.Region;
+import org.terasology.engine.world.generation.WorldRasterizerPlugin;
+import org.terasology.engine.world.generator.plugin.RegisterPlugin;
+import org.terasology.engine.world.generator.plugin.WorldGeneratorPluginLibrary;
 import org.terasology.math.geom.BaseVector3i;
 import org.terasology.math.geom.Vector3i;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.registry.In;
 import org.terasology.structureTemplates.components.SpawnBlockRegionsComponent;
-import org.terasology.world.block.Block;
-import org.terasology.world.chunks.CoreChunk;
-import org.terasology.world.generation.Region;
-import org.terasology.world.generation.WorldRasterizerPlugin;
-import org.terasology.world.generator.plugin.RegisterPlugin;
-import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
 
 import java.util.Map;
 import java.util.Objects;
 
 @RegisterPlugin
 public class IglooRasterizer implements WorldRasterizerPlugin {
-    @In
-    private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
-
     /**
      * Stores the prefab of the Igloo Structure Template.
      */
     Prefab iglooStructure;
+    @In
+    private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
 
     @Override
     public void initialize() {
-        iglooStructure = Objects.requireNonNull(CoreRegistry.get(PrefabManager.class)).getPrefab("ClimateConditions:Igloo");
+        iglooStructure = Objects.requireNonNull(CoreRegistry.get(PrefabManager.class)).getPrefab("ClimateConditions" +
+                ":Igloo");
     }
 
     /**

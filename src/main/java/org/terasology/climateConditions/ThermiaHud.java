@@ -3,10 +3,10 @@
 
 package org.terasology.climateConditions;
 
+import org.terasology.engine.rendering.assets.texture.TextureRegion;
+import org.terasology.engine.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.nui.widgets.UIImage;
 import org.terasology.nui.widgets.UILabel;
-import org.terasology.rendering.assets.texture.TextureRegion;
-import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 
 
 /**

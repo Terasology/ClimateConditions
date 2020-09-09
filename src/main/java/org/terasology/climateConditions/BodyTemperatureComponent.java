@@ -3,12 +3,12 @@
 
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.Replicate;
 
 /**
- * Provides Body Temperature to entity attached with BodyTemperatureComponent.
- * Is managed by {@link BodyTemperatureSystem}
+ * Provides Body Temperature to entity attached with BodyTemperatureComponent. Is managed by {@link
+ * BodyTemperatureSystem}
  */
 public class BodyTemperatureComponent implements Component {
 
@@ -25,11 +25,15 @@ public class BodyTemperatureComponent implements Component {
      *   in the {@link BodyTemperatureSystem}
      */
 
-    /** Stores the current body temperature value.*/
+    /**
+     * Stores the current body temperature value.
+     */
     @Replicate
     public float current = 0.4f;
 
-    /** Stores the current body temperature level.*/
+    /**
+     * Stores the current body temperature level.
+     */
     @Replicate
     BodyTemperatureLevel currentLevel = BodyTemperatureLevel.NORMAL;
 }

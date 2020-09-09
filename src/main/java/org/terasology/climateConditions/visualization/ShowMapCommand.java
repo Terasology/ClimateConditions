@@ -1,33 +1,15 @@
-/*
- * Copyright 2020 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.visualization;
 
-import com.google.common.base.Function;
 import org.terasology.climateConditions.ClimateConditionsSystem;
-import org.terasology.climateConditions.ConditionsBaseField;
-import org.terasology.context.Context;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.console.commandSystem.annotations.Command;
-import org.terasology.logic.console.commandSystem.annotations.CommandParam;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.NUIManager;
-import org.terasology.world.WorldProvider;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.console.commandSystem.annotations.Command;
+import org.terasology.engine.logic.console.commandSystem.annotations.CommandParam;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.NUIManager;
 
 @RegisterSystem
 public class ShowMapCommand extends BaseComponentSystem {
@@ -44,12 +26,15 @@ public class ShowMapCommand extends BaseComponentSystem {
 
     /**
      * Displays the selected map at the selected height level.
-     *
+     * <p>
      * The lighter a pixel on the map, the higher temperature/humidity/whatever else.
+     *
      * @param mapType
      */
-    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) at a given height level.")
-    public void showClimateMap(@CommandParam("map type") String mapType, @CommandParam("height to look at") int height) {
+    @Command(shortDescription = "Display condition map", helpText = "Show a given map (humidity, temperature) at a " +
+            "given height level.")
+    public void showClimateMap(@CommandParam("map type") String mapType,
+                               @CommandParam("height to look at") int height) {
         climateSystem.setMapHeight(height);
 
         if (mapType.equals("temperature")) {

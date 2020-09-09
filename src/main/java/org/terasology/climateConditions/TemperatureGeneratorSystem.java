@@ -1,40 +1,26 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
-import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
-import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
-import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.location.ImmutableBlockLocation;
-import org.terasology.registry.In;
-import org.terasology.world.block.BlockComponent;
+import org.terasology.engine.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
+import org.terasology.engine.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
+import org.terasology.engine.entitySystem.entity.lifecycleEvents.OnChangedComponent;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.location.ImmutableBlockLocation;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.block.BlockComponent;
 
 import java.util.Map;
 
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TemperatureGeneratorSystem extends BaseComponentSystem {
+    private final Map<ImmutableBlockLocation, TemperatureGeneratorComponent> activeComponents = Maps.newHashMap();
     @In
     private ClimateConditionsSystem environmentSystem;
-
-    private Map<ImmutableBlockLocation, TemperatureGeneratorComponent> activeComponents = Maps.newHashMap();
 
     @Override
     public void preBegin() {
@@ -48,17 +34,20 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
     }
 
     @ReceiveEvent
-    public void componentActivated(OnActivatedComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
+    public void componentActivated(OnActivatedComponent event, TemperatureGeneratorComponent generator,
+                                   BlockComponent block) {
         activeComponents.put(new ImmutableBlockLocation(block.getPosition()), generator);
     }
 
     @ReceiveEvent
-    public void componentUpdated(OnChangedComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
+    public void componentUpdated(OnChangedComponent event, TemperatureGeneratorComponent generator,
+                                 BlockComponent block) {
         activeComponents.put(new ImmutableBlockLocation(block.getPosition()), generator);
     }
 
     @ReceiveEvent
-    public void componentDeactivated(BeforeDeactivateComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
+    public void componentDeactivated(BeforeDeactivateComponent event, TemperatureGeneratorComponent generator,
+                                     BlockComponent block) {
         activeComponents.remove(new ImmutableBlockLocation(block.getPosition()));
     }
 
@@ -74,7 +63,8 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
                 if (distance <= generator.flatRange) {
                     value = generator.temperature;
                 } else if (distance < generator.maxRange) {
-                    float distanceFactor = 1f - (distance - generator.flatRange) / (generator.maxRange - generator.flatRange);
+                    float distanceFactor =
+                            1f - (distance - generator.flatRange) / (generator.maxRange - generator.flatRange);
                     value = value + (float) ((generator.temperature - value) * Math.pow(distanceFactor, 1 / 3f));
                 }
             }

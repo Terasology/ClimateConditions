@@ -5,20 +5,20 @@ package org.terasology.climateConditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.characters.AliveCharacterComponent;
-import org.terasology.logic.characters.events.PlayerDeathEvent;
-import org.terasology.logic.chat.ChatMessageEvent;
-import org.terasology.logic.delay.DelayManager;
-import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.logic.location.LocationComponent;
-import org.terasology.registry.In;
-import org.terasology.world.WorldComponent;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.characters.AliveCharacterComponent;
+import org.terasology.engine.logic.characters.events.PlayerDeathEvent;
+import org.terasology.engine.logic.chat.ChatMessageEvent;
+import org.terasology.engine.logic.delay.DelayManager;
+import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
+import org.terasology.engine.logic.location.LocationComponent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.world.WorldComponent;
 
 
 @RegisterSystem(value = RegisterMode.AUTHORITY)
@@ -26,21 +26,19 @@ public class BodyTemperatureSystem extends BaseComponentSystem {
     public static final String BODY_TEMPERATURE_UPDATE_ACTION_ID = "climateConditions:bodyTemperatureUpdate";
 
     private static final Logger logger = LoggerFactory.getLogger(BodyTemperatureSystem.class);
-
-    @In
-    private EntityManager entityManager;
+    private static final int CHECK_INTERVAL = 1000;
+    private final float criticalLowBodyTemperatureThreshold = 0.17f;
+    private final float lowBodyTemperatureThreshold = 0.22f;
+    private final float reducedBodyTemperatureThreshold = 0.3f;
+    private final float raisedBodyTemperatureThreshold = 0.5f;
+    private final float highBodyTemperatureThreshold = 0.58f;
+    private final float criticalHighBodyTemperatureThreshold = 0.63f;
     @In
     ClimateConditionsSystem climateConditionsSystem;
     @In
     DelayManager delayManager;
-
-    private static final int CHECK_INTERVAL = 1000;
-    private float criticalLowBodyTemperatureThreshold = 0.17f;
-    private float lowBodyTemperatureThreshold = 0.22f;
-    private float reducedBodyTemperatureThreshold = 0.3f;
-    private float raisedBodyTemperatureThreshold = 0.5f;
-    private float highBodyTemperatureThreshold = 0.58f;
-    private float criticalHighBodyTemperatureThreshold = 0.63f;
+    @In
+    private EntityManager entityManager;
     //The Normal Body Temperature range is 0.3 - 0.5 as of now.
 
     public void postBegin() {

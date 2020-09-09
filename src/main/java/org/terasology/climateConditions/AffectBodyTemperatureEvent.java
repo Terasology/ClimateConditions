@@ -3,7 +3,7 @@
 
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.event.AbstractValueModifiableEvent;
+import org.terasology.engine.entitySystem.event.AbstractValueModifiableEvent;
 
 /**
  * This event is sent out by the {@link BodyTemperatureSystem} to allow for other systems to modify the change in body

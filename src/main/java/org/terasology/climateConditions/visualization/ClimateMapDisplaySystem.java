@@ -1,15 +1,17 @@
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
+
 package org.terasology.climateConditions.visualization;
 
 import org.terasology.climateConditions.ClimateConditionsSystem;
 import org.terasology.climateConditions.ConditionsBaseField;
-import org.terasology.context.Context;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.rendering.nui.NUIManager;
-import org.terasology.world.WorldProvider;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
+import org.terasology.engine.world.WorldProvider;
 
 @Share(ClimateMapDisplaySystem.class)
 @RegisterSystem
@@ -48,12 +50,20 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     public ConditionsBaseField getClimateConditionsBase() {
         return base;
     }
-    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) { base = conditionsBase; }
-    public void setMapHeight(int height) { mapHeight = height; }
+
+    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) {
+        base = conditionsBase;
+    }
+
     public LocalPlayer getPlayer() {
         return localPlayer;
     }
+
     public int getMapHeight() {
         return mapHeight;
+    }
+
+    public void setMapHeight(int height) {
+        mapHeight = height;
     }
 }
