@@ -16,6 +16,7 @@ import static org.terasology.climateConditions.visualization.ShowMapCommand.SIZE
 
 public class ClimateMapWidget extends CoreWidget {
     private ShowMapCommand climateSystem;
+    private final int SIZE_OF_CANVAS = 300;
 
     /**
      * Converts the base climate condition values to a color, and draws them on the canvas.
@@ -24,7 +25,7 @@ public class ClimateMapWidget extends CoreWidget {
     @Override
     public void onDraw(Canvas canvas) {
         if (climateSystem != null) {
-            int eachColor = 300 / SIZE_OF_IMAGE_IN_BLOCKS; //size of image divided by the number of blocks along one side of it
+            int eachColor = SIZE_OF_CANVAS / SIZE_OF_IMAGE_IN_BLOCKS; //size of image divided by the number of blocks along one side of it
             canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(0, 0, SIZE_OF_IMAGE_IN_BLOCKS, SIZE_OF_IMAGE_IN_BLOCKS), Color.WHITE);
             for (int i = 0; i < SIZE_OF_IMAGE_IN_BLOCKS; i++) {
                 for (int j = 0; j < SIZE_OF_IMAGE_IN_BLOCKS; j++) {
@@ -48,7 +49,7 @@ public class ClimateMapWidget extends CoreWidget {
 
     @Override
     public Vector2i getPreferredContentSize(Canvas canvas, Vector2i sizeHint) {
-        return new Vector2i(300, 300);
+        return new Vector2i(SIZE_OF_CANVAS, SIZE_OF_CANVAS);
     }
 
     public void setClimateSystem(ShowMapCommand system) {

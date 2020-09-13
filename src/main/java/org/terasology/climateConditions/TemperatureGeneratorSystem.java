@@ -50,7 +50,7 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
                     @Override
                     public float getCondition(float value, float x, float y, float z) {
                         Vector3i position = new Vector3i(x, y, z);
-                        float temp = ((float) worldProvider.getExtraData("coreWorlds.temperature", position)) / 1000;
+                        float temp = ((float) worldProvider.getExtraData("climateConditions.temperature", position)) / 1000;
                         return temp - (position.y * .001f); // adjusts based on height
                     }
                 });

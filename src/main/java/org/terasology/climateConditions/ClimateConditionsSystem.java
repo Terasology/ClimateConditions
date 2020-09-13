@@ -32,8 +32,6 @@ import java.util.Map;
 @Share(value = ClimateConditionsSystem.class)
 public class ClimateConditionsSystem extends BaseComponentSystem {
     @In
-    private BlockManager block;
-    @In
     private WorldProvider world;
 
     private ConditionsBaseField temperatureBaseField;

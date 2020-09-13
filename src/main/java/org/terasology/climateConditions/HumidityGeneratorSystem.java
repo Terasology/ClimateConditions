@@ -56,7 +56,7 @@ public class HumidityGeneratorSystem extends BaseComponentSystem {
                 @Override
                 public float getCondition(float value, float x, float y, float z) {
                     Vector3i position = new Vector3i(x, y, z);
-                    return ((float) worldProvider.getExtraData("coreWorlds.humidity", position)) / 1000;
+                    return ((float) worldProvider.getExtraData("climateConditions.humidity", position)) / 1000;
                 }
             });
     }

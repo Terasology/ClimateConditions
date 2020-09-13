@@ -48,10 +48,12 @@ public class ConditionsBaseField {
     }
 
     private float getConditionAlpha(float x, float y, float z) {
+        // pulls the climate values out of extra data
+        // need to divide by 1000 here since that's how the float values were initially scaled up to fit as ints
         if (type.equals(TEMPERATURE)) {
-            return ((float) worldProvider.getExtraData("coreWorlds.temperature", new Vector3i(x, y, z))) / 1000 - .001f * y;
+            return ((float) worldProvider.getExtraData("climateConditions.temperature", new Vector3i(x, y, z))) / 1000 - .001f * y;
         } else {
-            return ((float) worldProvider.getExtraData("coreWorlds.humidity", new Vector3i(x, y, z))) / 1000;
+            return ((float) worldProvider.getExtraData("climateConditions.humidity", new Vector3i(x, y, z))) / 1000;
         }
     }
 }
