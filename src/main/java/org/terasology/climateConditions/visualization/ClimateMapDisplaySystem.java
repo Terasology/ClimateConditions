@@ -7,13 +7,11 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.rendering.nui.NUIManager;
 import org.terasology.world.WorldProvider;
 
-@Share(ClimateMapDisplaySystem.class)
 @RegisterSystem
 public class ClimateMapDisplaySystem extends BaseComponentSystem {
+
     @In
     private ClimateConditionsSystem climateConditions;
     @In
@@ -34,10 +32,10 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
         setClimateSeed();
 
         if (climateConditions.getHumidityBaseField() == null) {
-            climateConditions.configureHumidity(0, 200, 10, input -> input, 0, 1);
+            climateConditions.configureHumidity(0, 10, 0, 1);
         }
         if (climateConditions.getTemperatureBaseField() == null) {
-            climateConditions.configureTemperature(0, 200, 10, input -> input, 0, 1);
+            climateConditions.configureTemperature(0, 10, 0, 1);
         }
     }
 
@@ -45,15 +43,8 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
         climateConditions.setWorldSeed(worldProvider.getSeed());
     }
 
-    public ConditionsBaseField getClimateConditionsBase() {
-        return base;
-    }
-    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) { base = conditionsBase; }
-    public void setMapHeight(int height) { mapHeight = height; }
+    public ClimateConditionsSystem getClimateConditions() { return climateConditions; }
     public LocalPlayer getPlayer() {
         return localPlayer;
-    }
-    public int getMapHeight() {
-        return mapHeight;
     }
 }

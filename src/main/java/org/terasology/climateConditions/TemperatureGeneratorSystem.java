@@ -24,8 +24,11 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.ImmutableBlockLocation;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.WorldProvider;
 import org.terasology.world.block.BlockComponent;
+import org.terasology.world.block.BlockManager;
 
 import java.util.Map;
 
@@ -33,6 +36,10 @@ import java.util.Map;
 public class TemperatureGeneratorSystem extends BaseComponentSystem {
     @In
     private ClimateConditionsSystem environmentSystem;
+    @In
+    private BlockManager blockManager;
+    @In
+    private WorldProvider worldProvider;
 
     private Map<ImmutableBlockLocation, TemperatureGeneratorComponent> activeComponents = Maps.newHashMap();
 
@@ -42,7 +49,9 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
                 new ConditionModifier() {
                     @Override
                     public float getCondition(float value, float x, float y, float z) {
-                        return getValue(value, x, y, z);
+                        Vector3i position = new Vector3i(x, y, z);
+                        float temp = ((float) worldProvider.getExtraData("climateConditions.temperature", position)) / 1000;
+                        return temp - (position.y * .001f); // adjusts based on height
                     }
                 });
     }

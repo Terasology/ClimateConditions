@@ -16,6 +16,8 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
+import org.slf4j.LoggerFactory;
+import org.terasology.biomesAPI.Biome;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
@@ -24,8 +26,15 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.location.ImmutableBlockLocation;
+import org.terasology.math.TeraMath;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.registry.In;
+import org.terasology.world.WorldProvider;
+import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
+import org.terasology.world.block.BlockManager;
+import org.terasology.world.chunks.blockdata.ExtraBlockDataManager;
+
 
 import java.util.Map;
 
@@ -33,18 +42,23 @@ import java.util.Map;
 public class HumidityGeneratorSystem extends BaseComponentSystem {
     @In
     private ClimateConditionsSystem environmentSystem;
+    @In
+    private BlockManager blockManager;
+    @In
+    private WorldProvider worldProvider;
 
     private Map<ImmutableBlockLocation, HumidityGeneratorComponent> activeComponents = Maps.newHashMap();
 
     @Override
     public void preBegin() {
         environmentSystem.addHumidityModifier(1000,
-                new ConditionModifier() {
-                    @Override
-                    public float getCondition(float value, float x, float y, float z) {
-                        return getValue(value, x, y, z);
-                    }
-                });
+            new ConditionModifier() {
+                @Override
+                public float getCondition(float value, float x, float y, float z) {
+                    Vector3i position = new Vector3i(x, y, z);
+                    return ((float) worldProvider.getExtraData("climateConditions.humidity", position)) / 1000;
+                }
+            });
     }
 
     @ReceiveEvent

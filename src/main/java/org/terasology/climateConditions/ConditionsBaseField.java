@@ -15,41 +15,45 @@
  */
 package org.terasology.climateConditions;
 
-import com.google.common.base.Function;
 import org.terasology.math.TeraMath;
-import org.terasology.utilities.procedural.Noise2D;
+import org.terasology.math.geom.Vector3i;
+import org.terasology.registry.CoreRegistry;
+import org.terasology.registry.In;
 import org.terasology.utilities.procedural.SimplexNoise;
+import org.terasology.world.WorldProvider;
 
 public class ConditionsBaseField {
-    private Noise2D noiseTable;
-    private int seaLevel;
-    private int maxLevel;
-    private float noiseMultiplier;
-    private Function<Float, Float> function;
 
-    public ConditionsBaseField(int seaLevel, int maxLevel, float noiseMultiplier,
-                               Function<Float, Float> function, long conditionSeed) {
-        this.seaLevel = seaLevel;
-        this.maxLevel = maxLevel;
-        this.noiseMultiplier = noiseMultiplier;
-        this.function = function;
-        noiseTable = new SimplexNoise(conditionSeed);
+    @In
+    ClimateConditionsSystem climateConditionsSystem;
+    @In
+    WorldProvider worldProvider;
+
+    public static final String TEMPERATURE = "temperature";
+    public static final String HUMIDITY = "humidity";
+
+    private String type;
+
+    public ConditionsBaseField(String type) {
+        this.type = type;
+        worldProvider = CoreRegistry.get(WorldProvider.class);
     }
 
-    public float get(float x, float y, float z) {
-        return TeraMath.clamp(getConditionAlpha(x, y, z), 0, 1);
+    public float get(float x, float y, float z, boolean clamp) {
+        if (clamp) {
+            return TeraMath.clamp(getConditionAlpha(x, y, z), 0f, 1f);
+        } else {
+            return getConditionAlpha(x, y, z);
+        }
     }
 
     private float getConditionAlpha(float x, float y, float z) {
-        float result = noiseTable.noise(x * noiseMultiplier, z * noiseMultiplier);
-        float temperatureBase = function.apply(TeraMath.clamp((result + 1.0f) / 2.0f));
-        if (y <= seaLevel) {
-            return temperatureBase;
-        } else if (y >= maxLevel) {
-            return 0;
+        // pulls the climate values out of extra data
+        // need to divide by 1000 here since that's how the float values were initially scaled up to fit as ints
+        if (type.equals(TEMPERATURE)) {
+            return ((float) worldProvider.getExtraData("climateConditions.temperature", new Vector3i(x, y, z))) / 1000 - .001f * y;
         } else {
-            // The higher above see level - the colder
-            return temperatureBase * (1f * (maxLevel - y) / (maxLevel - seaLevel));
+            return ((float) worldProvider.getExtraData("climateConditions.humidity", new Vector3i(x, y, z))) / 1000;
         }
     }
 }

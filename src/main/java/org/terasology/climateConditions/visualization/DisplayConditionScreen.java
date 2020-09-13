@@ -16,17 +16,16 @@
 
 package org.terasology.climateConditions.visualization;
 
-import org.terasology.context.Context;
 import org.terasology.registry.In;
 import org.terasology.rendering.nui.CoreScreenLayer;
 
 public class DisplayConditionScreen extends CoreScreenLayer {
     @In
-    private ClimateMapDisplaySystem climateSystem;
+    private ShowMapCommand climateSystem;
 
     @Override
     public void initialise() {
         ClimateMapWidget climateMapWidget = find("climateMap", ClimateMapWidget.class);
-        climateMapWidget.setShowMapCommand(climateSystem);
+        climateMapWidget.setClimateSystem(climateSystem);
     }
 }
