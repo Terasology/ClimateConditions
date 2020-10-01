@@ -16,6 +16,8 @@
 package org.terasology.climateConditions;
 
 import com.google.common.collect.Maps;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeDeactivateComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnActivatedComponent;
 import org.terasology.entitySystem.entity.lifecycleEvents.OnChangedComponent;
@@ -23,7 +25,7 @@ import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.location.ImmutableBlockLocation;
+import org.terasology.math.JomlUtil;
 import org.terasology.registry.In;
 import org.terasology.world.block.BlockComponent;
 
@@ -34,43 +36,38 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
     @In
     private ClimateConditionsSystem environmentSystem;
 
-    private Map<ImmutableBlockLocation, TemperatureGeneratorComponent> activeComponents = Maps.newHashMap();
+    private Map<Vector3i, TemperatureGeneratorComponent> activeComponents = Maps.newHashMap();
 
     @Override
     public void preBegin() {
         environmentSystem.addTemperatureModifier(1000,
-                new ConditionModifier() {
-                    @Override
-                    public float getCondition(float value, float x, float y, float z) {
-                        return getValue(value, x, y, z);
-                    }
-                });
+            (value, x, y, z) -> getValue(value, x, y, z));
     }
 
     @ReceiveEvent
     public void componentActivated(OnActivatedComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
-        activeComponents.put(new ImmutableBlockLocation(block.getPosition()), generator);
+        activeComponents.put(JomlUtil.from(block.position), generator);
     }
 
     @ReceiveEvent
     public void componentUpdated(OnChangedComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
-        activeComponents.put(new ImmutableBlockLocation(block.getPosition()), generator);
+        activeComponents.put(JomlUtil.from(block.position), generator);
     }
 
     @ReceiveEvent
     public void componentDeactivated(BeforeDeactivateComponent event, TemperatureGeneratorComponent generator, BlockComponent block) {
-        activeComponents.remove(new ImmutableBlockLocation(block.getPosition()));
+        activeComponents.remove(JomlUtil.from(block.position));
     }
 
     private float getValue(float baseValue, float x, float y, float z) {
         float value = baseValue;
-        for (Map.Entry<ImmutableBlockLocation, TemperatureGeneratorComponent> entry : activeComponents.entrySet()) {
-            ImmutableBlockLocation location = entry.getKey();
+        for (Map.Entry<Vector3i, TemperatureGeneratorComponent> entry : activeComponents.entrySet()) {
+            Vector3i location = entry.getKey();
             TemperatureGeneratorComponent generator = entry.getValue();
 
             if ((generator.temperature > value && generator.heater)
-                    || (generator.temperature < value && !generator.heater)) {
-                float distance = getDistance(x, y, z, location);
+                || (generator.temperature < value && !generator.heater)) {
+                float distance = Vector3f.distance(location.x, location.y, location.z, x, y, z);
                 if (distance <= generator.flatRange) {
                     value = generator.temperature;
                 } else if (distance < generator.maxRange) {
@@ -81,10 +78,5 @@ public class TemperatureGeneratorSystem extends BaseComponentSystem {
         }
 
         return value;
-    }
-
-    private float getDistance(float x, float y, float z, ImmutableBlockLocation location) {
-        return (float) Math.sqrt((location.x - x) * (location.x - x)
-                + (location.y - y) * (location.y - y) + (location.z - z) * (location.z - z));
     }
 }
