@@ -6,27 +6,28 @@
             {
                 "type": "UIBox",
                 "layoutInfo": {
-                    "height": 50,
-                    "position-bottom": {
-                        "offset": 335
+                    "position-top": {
+                        "offset": 200
                     },
-                    "position-left": {},
-                    "width": 50
+                    "position-left": {
+                        "offset": 32
+                    },
+                    "height": 64,
+                    "width": 64
                 },
                 "content": {
-                    "type": "flowLayout",
+                    "type": "relativeLayout",
                     "contents": [
                         {
                             "type": "UIImage",
                             "id": "thermiaIcon",
-                            "image": "ClimateConditions:Normal",
                             "layoutInfo": {
                                 "position-left": {
-                                    "offset": 10
+                                    "offset": 0
                                 },
                                 "position-vertical-center": {},
-                                "height": 30,
-                                "width": 30
+                                "height": 64,
+                                "width": 64
                             }
                         },
                         {
@@ -34,8 +35,12 @@
                             "id": "thermiaLevelLabel",
                             "text": "",
                             "layoutInfo": {
-                                "use-content-width": true,
-                                "position-horizontal-center": {},
+                                "position-bottom": {
+                                    "offset": 16
+                                },
+                                "position-left": {
+                                    "offset": 8
+                                },
                                 "height": 30
                             }
                         }
@@ -43,8 +48,8 @@
                     "layoutInfo": {
                         "position-horizontal-center": {},
                         "position-vertical-center": {},
-                        "use-content-width": true,
-                        "height": 50
+                        "width": 64,
+                        "height": 64
                     }
                 }
             }
