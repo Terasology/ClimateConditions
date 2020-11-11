@@ -37,7 +37,7 @@ public class ThermiaClientSystem extends BaseComponentSystem {
             thermiaHud.setVisible(true);
             thermiaHud.setLabelText(event.getNewValue());
             if (event.getOldValue() == 0) {
-                TextureRegion hypothermiaIcon = Assets.getTexture("ClimateConditions:HypothermiaIcon").get();
+                TextureRegion hypothermiaIcon = Assets.getTexture("ClimateConditions:hypothermia").get();
                 thermiaHud.setImage(hypothermiaIcon);
             }
         } else {    // newValue = 0 and body temperature has returned to the normal range
@@ -54,7 +54,7 @@ public class ThermiaClientSystem extends BaseComponentSystem {
             thermiaHud.setVisible(true);
             thermiaHud.setLabelText(event.getNewValue());
             if (event.getOldValue() == 0) {
-                TextureRegion hyperthermiaIcon = Assets.getTexture("ClimateConditions:HyperthermiaIcon").get();
+                TextureRegion hyperthermiaIcon = Assets.getTexture("ClimateConditions:hyperthermia").get();
                 thermiaHud.setImage(hyperthermiaIcon);
             }
         } else {    // newValue = 0 and body temperature has returned to the normal range
