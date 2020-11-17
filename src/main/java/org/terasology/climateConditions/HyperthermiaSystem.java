@@ -82,7 +82,7 @@ public class HyperthermiaSystem extends BaseComponentSystem {
      */
     private void revertWeakening(EntityRef player, HealthComponent health, HyperthermiaComponent hyperthermia) {
         player.send(new ChangeMaxHealthEvent(player.getParentPrefab().getComponent(HealthComponent.class).maxHealth));
-        player.send(new ActivateRegenEvent());
+        player.send(new ActivateRegenEvent(health.regenRate));
         health.regenRate /= hyperthermia.regenMultiplier;
         player.saveComponent(health);
     }
