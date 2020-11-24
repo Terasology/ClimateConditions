@@ -3,9 +3,11 @@
 
 package org.terasology.climateConditions.igloo;
 
+import org.joml.Vector3ic;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.math.ChunkMath;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.BaseVector3i;
 import org.terasology.math.geom.Vector3i;
@@ -13,6 +15,8 @@ import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.structureTemplates.components.SpawnBlockRegionsComponent;
 import org.terasology.world.block.Block;
+import org.terasology.world.block.BlockRegion;
+import org.terasology.world.block.BlockRegionIterable;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizerPlugin;
@@ -53,12 +57,12 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
             // Fill blocks in the required regions.
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
                 Block block = regionToFill.blockType;
-                Region3i region = regionToFill.region;
-                for (Vector3i pos : region) {
+                BlockRegion region = regionToFill.region;
+                region.translate(JomlUtil.from(basePosition));
+                for (Vector3ic pos : BlockRegionIterable.region(region).build()) {
                     // pos is the position vector relative to the origin block of the Structural Template.
-                    pos.add(basePosition);
-                    if (chunkRegion.getRegion().encompasses(pos)) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos), block);
+                    if (chunkRegion.getRegion().encompasses(JomlUtil.from(pos))) {
+                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos, new org.joml.Vector3i()), block);
                     }
                 }
             }
