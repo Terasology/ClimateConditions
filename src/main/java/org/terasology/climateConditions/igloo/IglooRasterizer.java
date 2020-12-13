@@ -51,9 +51,9 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
         SpawnBlockRegionsComponent spawnBlockRegionsComponent =
                 iglooStructure.getComponent(SpawnBlockRegionsComponent.class);
 
-        for (Map.Entry<BaseVector3i, Igloo> entry : structureFacet.getWorldEntries().entrySet()) {
+        for (Map.Entry<Vector3ic, Igloo> entry : structureFacet.getWorldEntries().entrySet()) {
             //Base Position is the corner position for the Igloo Structure Template.
-            Vector3i basePosition = new Vector3i(JomlUtil.from(entry.getKey()));
+            Vector3i basePosition = new Vector3i(entry.getKey());
             // Fill blocks in the required regions.
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
                 Block block = regionToFill.blockType;
@@ -61,8 +61,8 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
                 for (Vector3i pos : BlockRegions.iterable(region)) {
                     // pos is the position vector relative to the origin block of the Structural Template
                     pos.add(basePosition);
-                    if (chunkRegion.getRegion().encompasses(JomlUtil.from(pos))) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(JomlUtil.from(pos)), block);
+                    if (chunkRegion.getRegion().containsBlock(pos)) {
+                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos, new Vector3i()), block);
                     }
                 }
             }

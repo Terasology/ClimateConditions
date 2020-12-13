@@ -8,6 +8,7 @@ import org.terasology.core.world.generator.facets.BiomeFacet;
 import org.terasology.math.Region3i;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetBorder;
@@ -51,15 +52,15 @@ public class IglooProvider implements FacetProviderPlugin {
         SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
         BiomeFacet biomeFacet = region.getRegionFacet(BiomeFacet.class);
 
-        Region3i worldRegion = surfaceHeightFacet.getWorldRegion();
+        BlockRegion worldRegion = surfaceHeightFacet.getWorldRegion();
 
-        for (int wz = worldRegion.minZ(); wz <= worldRegion.maxZ(); wz++) {
-            for (int wx = worldRegion.minX(); wx <= worldRegion.maxX(); wx++) {
+        for (int wz = worldRegion.getMinZ(); wz <= worldRegion.getMaxZ(); wz++) {
+            for (int wx = worldRegion.getMinX(); wx <= worldRegion.getMaxX(); wx++) {
                 for (int surfaceHeight : surfaceHeightFacet.getWorldColumn(wx, wz)) {
                     int seaLevel = seaLevelFacet.getSeaLevel();
                     // check if height is within this region
-                    if (surfaceHeight >= facet.getWorldRegion().minY() &&
-                            surfaceHeight <= facet.getWorldRegion().maxY()) {
+                    if (surfaceHeight >= facet.getWorldRegion().getMinY() &&
+                            surfaceHeight <= facet.getWorldRegion().getMaxY()) {
                         // Sea Level + 96 is the height at which snow blocks are placed in all biomes.
                         if (noise.noise(wx, surfaceHeight, wz) > 0.9999f && (surfaceHeight >= seaLevel + SNOW_BIOME_THRESHOLD ||
                                 biomeFacet.getWorld(wx, wz).getId().equals(CoreBiome.SNOW))) {
