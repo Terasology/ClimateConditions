@@ -15,8 +15,6 @@ import org.terasology.registry.In;
 import org.terasology.structureTemplates.components.SpawnBlockRegionsComponent;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockRegion;
-import org.terasology.world.block.BlockRegionIterable;
-import org.terasology.world.block.BlockRegions;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizerPlugin;
@@ -58,8 +56,9 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
                 Block block = regionToFill.blockType;
                 BlockRegion region = regionToFill.region;
-                for (Vector3i pos : BlockRegions.iterable(region)) {
+                for (Vector3ic p : region) {
                     // pos is the position vector relative to the origin block of the Structural Template
+                    Vector3i pos = new Vector3i(p);
                     pos.add(basePosition);
                     if (chunkRegion.getRegion().encompasses(JomlUtil.from(pos))) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(JomlUtil.from(pos)), block);
