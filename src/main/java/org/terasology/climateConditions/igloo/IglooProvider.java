@@ -5,9 +5,9 @@ package org.terasology.climateConditions.igloo;
 
 import org.terasology.core.world.CoreBiome;
 import org.terasology.core.world.generator.facets.BiomeFacet;
-import org.terasology.math.Region3i;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetBorder;
@@ -51,7 +51,7 @@ public class IglooProvider implements FacetProviderPlugin {
         SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
         BiomeFacet biomeFacet = region.getRegionFacet(BiomeFacet.class);
 
-        Region3i worldRegion = surfaceHeightFacet.getWorldRegion();
+        BlockRegion worldRegion = surfaceHeightFacet.getWorldRegion();
 
         for (int wz = worldRegion.minZ(); wz <= worldRegion.maxZ(); wz++) {
             for (int wx = worldRegion.minX(); wx <= worldRegion.maxX(); wx++) {

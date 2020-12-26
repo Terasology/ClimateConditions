@@ -8,8 +8,6 @@ import org.joml.Vector3ic;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
 import org.terasology.math.ChunkMath;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.BaseVector3i;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.structureTemplates.components.SpawnBlockRegionsComponent;
@@ -49,19 +47,19 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
         SpawnBlockRegionsComponent spawnBlockRegionsComponent =
                 iglooStructure.getComponent(SpawnBlockRegionsComponent.class);
 
-        for (Map.Entry<BaseVector3i, Igloo> entry : structureFacet.getWorldEntries().entrySet()) {
+        for (Map.Entry<Vector3ic, Igloo> entry : structureFacet.getWorldEntries().entrySet()) {
             //Base Position is the corner position for the Igloo Structure Template.
-            Vector3i basePosition = new Vector3i(JomlUtil.from(entry.getKey()));
+            Vector3i basePosition = new Vector3i(entry.getKey());
             // Fill blocks in the required regions.
             for (SpawnBlockRegionsComponent.RegionToFill regionToFill : spawnBlockRegionsComponent.regionsToFill) {
                 Block block = regionToFill.blockType;
                 BlockRegion region = regionToFill.region;
-                for (Vector3ic p : region) {
+                for (Vector3ic pos : region) {
                     // pos is the position vector relative to the origin block of the Structural Template
-                    Vector3i pos = new Vector3i(p);
-                    pos.add(basePosition);
-                    if (chunkRegion.getRegion().encompasses(JomlUtil.from(pos))) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(JomlUtil.from(pos)), block);
+                    Vector3i position = new Vector3i(pos);
+                    position.add(basePosition);
+                    if (chunkRegion.getRegion().contains(position)) {
+                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(position, new Vector3i()), block);
                     }
                 }
             }
