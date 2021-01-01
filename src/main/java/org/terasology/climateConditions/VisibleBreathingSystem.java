@@ -15,6 +15,7 @@
  */
 package org.terasology.climateConditions;
 
+import org.joml.Vector3f;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.lifecycleEvents.BeforeRemoveComponent;
@@ -27,8 +28,6 @@ import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
 import org.terasology.logic.location.Location;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.particles.components.generators.VelocityRangeGeneratorComponent;
 import org.terasology.registry.In;
 
@@ -53,7 +52,7 @@ public class VisibleBreathingSystem extends BaseComponentSystem {
     @ReceiveEvent(components = {HypothermiaComponent.class})
     public void onHypothermia(OnAddedComponent event, EntityRef player) {
         delayManager.addPeriodicAction(player, VisibleBreathingSystem.VISIBLE_BREATH_ACTION_ID, initialDelay,
-                breathInterval);
+            breathInterval);
     }
 
     @ReceiveEvent(components = HypothermiaComponent.class)
@@ -71,18 +70,18 @@ public class VisibleBreathingSystem extends BaseComponentSystem {
     private void updateVisibleBreathEffect(EntityRef player, LocationComponent targetLoc) {
         EntityRef particleEntity = entityManager.create("climateConditions:VisibleBreathEffect");
         LocationComponent childLoc = particleEntity.getComponent(LocationComponent.class);
-        childLoc.setWorldPosition(targetLoc.getWorldPosition());
+        childLoc.setWorldPosition(targetLoc.getWorldPosition(new Vector3f()));
         Location.attachChild(player, particleEntity);
         particleEntity.setOwner(player);
-        Vector3f direction = targetLoc.getLocalDirection();
+        Vector3f direction = targetLoc.getLocalDirection(new Vector3f());
         direction.normalize();
         particleEntity.upsertComponent((VelocityRangeGeneratorComponent.class), maybeComponent -> {
             VelocityRangeGeneratorComponent velocity = maybeComponent.orElse(new VelocityRangeGeneratorComponent());
-            direction.scale(0.5f);
-            direction.addY(0.5f);
-            velocity.minVelocity = JomlUtil.from(direction);
-            direction.scale(1.5f);
-            velocity.maxVelocity = JomlUtil.from(direction);
+            direction.mul(0.5f);
+            direction.y += 0.5f;
+            velocity.minVelocity = new Vector3f(direction);
+            direction.mul(1.5f);
+            velocity.maxVelocity = new Vector3f(direction);
             return velocity;
         });
         player.upsertComponent((VisibleBreathComponent.class), maybeComponent -> {
