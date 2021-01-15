@@ -17,10 +17,10 @@ package org.terasology.climateConditions;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import org.joml.Vector3fc;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.math.geom.Vector3f;
 import org.terasology.registry.Share;
 
 import java.util.Map;
@@ -113,12 +113,12 @@ public class ClimateConditionsSystem extends BaseComponentSystem {
         return value;
     }
 
-    public float getTemperature(Vector3f position) {
-        return getTemperature(position.getX(), position.getY(), position.getZ());
+    public float getTemperature(Vector3fc position) {
+        return getTemperature(position.x(), position.y(), position.z());
     }
 
-    public float getHumidity(Vector3f position) {
-        return getHumidity(position.getX(), position.getY(), position.getZ());
+    public float getHumidity(Vector3fc position) {
+        return getHumidity(position.x(), position.y(), position.z());
     }
 
     public String getWorldSeed() {
