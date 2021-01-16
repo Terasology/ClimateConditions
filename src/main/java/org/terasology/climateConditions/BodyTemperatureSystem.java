@@ -17,9 +17,9 @@ import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
 import org.terasology.logic.location.LocationComponent;
+import org.terasology.math.JomlUtil;
 import org.terasology.registry.In;
 import org.terasology.world.WorldComponent;
-
 
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class BodyTemperatureSystem extends BaseComponentSystem {
@@ -67,8 +67,8 @@ public class BodyTemperatureSystem extends BaseComponentSystem {
                     BodyTemperatureComponent.class, LocationComponent.class)) {
                 LocationComponent location = entity.getComponent(LocationComponent.class);
                 BodyTemperatureComponent bodyTemperature = entity.getComponent(BodyTemperatureComponent.class);
-                float envTemperature = climateConditionsSystem.getTemperature(location.getLocalPosition());
-                float envHumidity = climateConditionsSystem.getHumidity(location.getLocalPosition());
+                float envTemperature = climateConditionsSystem.getTemperature(JomlUtil.from(location.getLocalPosition()));
+                float envHumidity = climateConditionsSystem.getHumidity(JomlUtil.from(location.getLocalPosition()));
                 float deltaTemp =
                         ((((envTemperature - (envHumidity / 10)) - bodyTemperature.current) / 100000) * CHECK_INTERVAL);
 
