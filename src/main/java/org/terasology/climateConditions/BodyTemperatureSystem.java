@@ -67,8 +67,8 @@ public class BodyTemperatureSystem extends BaseComponentSystem {
                     BodyTemperatureComponent.class, LocationComponent.class)) {
                 LocationComponent location = entity.getComponent(LocationComponent.class);
                 BodyTemperatureComponent bodyTemperature = entity.getComponent(BodyTemperatureComponent.class);
-                float envTemperature = climateConditionsSystem.getTemperature(JomlUtil.from(location.getLocalPosition()));
-                float envHumidity = climateConditionsSystem.getHumidity(JomlUtil.from(location.getLocalPosition()));
+                float envTemperature = climateConditionsSystem.getTemperature(location.getLocalPosition());
+                float envHumidity = climateConditionsSystem.getHumidity(location.getLocalPosition());
                 float deltaTemp =
                         ((((envTemperature - (envHumidity / 10)) - bodyTemperature.current) / 100000) * CHECK_INTERVAL);
 
