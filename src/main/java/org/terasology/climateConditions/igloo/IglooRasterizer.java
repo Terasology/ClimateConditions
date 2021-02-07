@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.igloo;
@@ -7,12 +7,12 @@ import org.joml.Vector3i;
 import org.joml.Vector3ic;
 import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.prefab.PrefabManager;
-import org.terasology.math.ChunkMath;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.registry.In;
 import org.terasology.structureTemplates.components.SpawnBlockRegionsComponent;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockRegion;
+import org.terasology.world.chunks.Chunks;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizerPlugin;
@@ -59,7 +59,7 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
                     Vector3i position = new Vector3i(pos);
                     position.add(basePosition);
                     if (chunkRegion.getRegion().contains(position)) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(position, new Vector3i()), block);
+                        chunk.setBlock(Chunks.toRelative(position, new Vector3i()), block);
                     }
                 }
             }
