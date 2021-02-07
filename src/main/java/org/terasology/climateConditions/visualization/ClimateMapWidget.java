@@ -5,7 +5,7 @@ package org.terasology.climateConditions.visualization;
 
 import org.joml.Vector2i;
 import org.joml.Vector3f;
-import org.terasology.math.JomlUtil;
+import org.terasology.joml.geom.Rectanglei;
 import org.terasology.nui.Canvas;
 import org.terasology.nui.Color;
 import org.terasology.nui.CoreWidget;
@@ -22,7 +22,7 @@ public class ClimateMapWidget extends CoreWidget {
     @Override
     public void onDraw(Canvas canvas) {
         if (climateSystem != null) {
-            canvas.drawFilledRectangle(JomlUtil.rectangleiFromMinAndSize(0, 0, SIZE_OF_IMAGE, SIZE_OF_IMAGE), Color.WHITE);
+            canvas.drawFilledRectangle(new Rectanglei(0, 0, SIZE_OF_IMAGE, SIZE_OF_IMAGE), Color.white);
             for (int i = 0; i < SIZE_OF_IMAGE; i++) {
                 for (int j = 0; j < SIZE_OF_IMAGE; j++) {
                     Vector3f playerPosition = climateSystem.getPlayer().getPosition(new Vector3f());
