@@ -17,7 +17,6 @@ import org.terasology.logic.chat.ChatMessageEvent;
 import org.terasology.logic.delay.DelayManager;
 import org.terasology.logic.delay.PeriodicActionTriggeredEvent;
 import org.terasology.logic.location.LocationComponent;
-import org.terasology.math.JomlUtil;
 import org.terasology.registry.In;
 import org.terasology.world.WorldComponent;
 
