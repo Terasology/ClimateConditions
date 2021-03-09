@@ -3,7 +3,7 @@
 
 package org.terasology.climateConditions.alterationEffects;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * This is the component added to entities with the body temperature alteration effect.

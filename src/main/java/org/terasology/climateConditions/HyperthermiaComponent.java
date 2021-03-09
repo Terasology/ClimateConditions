@@ -15,7 +15,7 @@
  */
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 public class HyperthermiaComponent implements Component {
     public float walkSpeedMultiplier = 0.7f;

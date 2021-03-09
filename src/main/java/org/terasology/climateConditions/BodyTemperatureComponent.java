@@ -3,8 +3,8 @@
 
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.Replicate;
 
 /**
  * Provides Body Temperature to entity attached with BodyTemperatureComponent.

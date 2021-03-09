@@ -18,10 +18,10 @@ package org.terasology.climateConditions;
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import org.joml.Vector3fc;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.registry.Share;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.Share;
 
 import java.util.Map;
 

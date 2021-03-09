@@ -15,7 +15,7 @@
  */
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 /**
  * Increases the game difficulty in locations with extreme cold climate.

@@ -16,9 +16,8 @@
 
 package org.terasology.climateConditions.visualization;
 
-import org.terasology.context.Context;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.CoreScreenLayer;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.CoreScreenLayer;
 
 public class DisplayConditionScreen extends CoreScreenLayer {
     @In

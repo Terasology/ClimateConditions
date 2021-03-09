@@ -3,7 +3,7 @@
 
 package org.terasology.climateConditions;
 
-import org.terasology.entitySystem.event.BeforeAfterEvent;
+import org.terasology.engine.entitySystem.event.BeforeAfterEvent;
 
 /**
  * Event sent out by the {@link BodyTemperatureSystem} to notify other systems about the change in the Body Temperature

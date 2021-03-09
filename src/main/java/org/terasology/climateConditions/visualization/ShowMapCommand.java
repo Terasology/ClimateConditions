@@ -16,18 +16,13 @@
 
 package org.terasology.climateConditions.visualization;
 
-import com.google.common.base.Function;
 import org.terasology.climateConditions.ClimateConditionsSystem;
-import org.terasology.climateConditions.ConditionsBaseField;
-import org.terasology.context.Context;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.console.commandSystem.annotations.Command;
-import org.terasology.logic.console.commandSystem.annotations.CommandParam;
-import org.terasology.logic.players.LocalPlayer;
-import org.terasology.registry.In;
-import org.terasology.rendering.nui.NUIManager;
-import org.terasology.world.WorldProvider;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.console.commandSystem.annotations.Command;
+import org.terasology.engine.logic.console.commandSystem.annotations.CommandParam;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.rendering.nui.NUIManager;
 
 @RegisterSystem
 public class ShowMapCommand extends BaseComponentSystem {

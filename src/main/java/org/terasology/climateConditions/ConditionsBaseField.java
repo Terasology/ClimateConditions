@@ -16,9 +16,9 @@
 package org.terasology.climateConditions;
 
 import com.google.common.base.Function;
+import org.terasology.engine.utilities.procedural.Noise2D;
+import org.terasology.engine.utilities.procedural.SimplexNoise;
 import org.terasology.math.TeraMath;
-import org.terasology.utilities.procedural.Noise2D;
-import org.terasology.utilities.procedural.SimplexNoise;
 
 public class ConditionsBaseField {
     private Noise2D noiseTable;
