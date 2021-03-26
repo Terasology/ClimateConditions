@@ -11,8 +11,8 @@ import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.block.Block;
 import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.chunks.Chunk;
 import org.terasology.engine.world.chunks.Chunks;
-import org.terasology.engine.world.chunks.CoreChunk;
 import org.terasology.engine.world.generation.Region;
 import org.terasology.engine.world.generation.WorldRasterizerPlugin;
 import org.terasology.engine.world.generator.plugin.RegisterPlugin;
@@ -42,7 +42,7 @@ public class IglooRasterizer implements WorldRasterizerPlugin {
      * at the time of world gen.
      */
     @Override
-    public void generateChunk(CoreChunk chunk, Region chunkRegion) {
+    public void generateChunk(Chunk chunk, Region chunkRegion) {
         IglooFacet structureFacet = chunkRegion.getFacet(IglooFacet.class);
         SpawnBlockRegionsComponent spawnBlockRegionsComponent =
                 iglooStructure.getComponent(SpawnBlockRegionsComponent.class);
