@@ -24,9 +24,9 @@ import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.characters.AffectJumpForceEvent;
 import org.terasology.engine.logic.characters.GetMaxSpeedEvent;
-import org.terasology.logic.health.HealthComponent;
-import org.terasology.logic.health.event.ActivateRegenEvent;
-import org.terasology.logic.health.event.ChangeMaxHealthEvent;
+import org.terasology.module.health.components.HealthComponent;
+import org.terasology.module.health.events.ActivateRegenEvent;
+import org.terasology.module.health.events.ChangeMaxHealthEvent;
 import org.terasology.thirst.event.AffectThirstEvent;
 
 /**
