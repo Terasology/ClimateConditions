@@ -25,23 +25,25 @@ import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.characters.AffectJumpForceEvent;
 import org.terasology.engine.logic.characters.GetMaxSpeedEvent;
 import org.terasology.module.health.components.HealthComponent;
-import org.terasology.module.health.events.ActivateRegenEvent;
+import org.terasology.module.health.events.BeforeRegenEvent;
 import org.terasology.module.health.events.ChangeMaxHealthEvent;
 import org.terasology.thirst.event.AffectThirstEvent;
 
+import static org.terasology.module.health.core.BaseRegenAuthoritySystem.BASE_REGEN;
+
 /**
- * Handles effects related to Hyperthermia.
- * Hyperthermia occurs in case of extremely high body temperatures and, e.g., slows the player's movements.
- * For adding new effects in existing or new Hyperthermia Levels, {@link HyperthermiaLevelChangedEvent} should be
- * reacted to either in this or a separate authority system for eg. {@link FrostbiteSystem}, a hypothermia effect.
+ * Handles effects related to Hyperthermia. Hyperthermia occurs in case of extremely high body temperatures and, e.g.,
+ * slows the player's movements. For adding new effects in existing or new Hyperthermia Levels, {@link
+ * HyperthermiaLevelChangedEvent} should be reacted to either in this or a separate authority system for eg. {@link
+ * FrostbiteSystem}, a hypothermia effect.
  */
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class HyperthermiaSystem extends BaseComponentSystem {
     private static final Logger logger = LoggerFactory.getLogger(HyperthermiaSystem.class);
 
     /**
-     * Reduces the walking/running speed of the player.
-     * Is only active iff the player has a {@link HyperthermiaComponent}.
+     * Reduces the walking/running speed of the player. Is only active iff the player has a {@link
+     * HyperthermiaComponent}.
      */
     @ReceiveEvent
     public void modifySpeed(GetMaxSpeedEvent event, EntityRef player, HyperthermiaComponent hyperthermia) {
@@ -49,8 +51,7 @@ public class HyperthermiaSystem extends BaseComponentSystem {
     }
 
     /**
-     * Reduces the jump speed of the player.
-     * Is only active iff the player has a {@link HyperthermiaComponent}.
+     * Reduces the jump speed of the player. Is only active iff the player has a {@link HyperthermiaComponent}.
      */
     @ReceiveEvent
     public void modifyJumpSpeed(AffectJumpForceEvent event, EntityRef player, HyperthermiaComponent hyperthermia) {
@@ -58,8 +59,8 @@ public class HyperthermiaSystem extends BaseComponentSystem {
     }
 
     /**
-     * Increases the thirst decay per second of the player.
-     * Is only active iff the player has a {@link HyperthermiaComponent}.
+     * Increases the thirst decay per second of the player. Is only active iff the player has a {@link
+     * HyperthermiaComponent}.
      */
     @ReceiveEvent
     public void modifyThirst(AffectThirstEvent event, EntityRef player, HyperthermiaComponent hyperthermia) {
@@ -72,18 +73,36 @@ public class HyperthermiaSystem extends BaseComponentSystem {
     private void applyWeakening(EntityRef player, HealthComponent health, HyperthermiaComponent hyperthermia) {
         player.send(new ChangeMaxHealthEvent(hyperthermia.maxHealthMultiplier * health.maxHealth));
         health.currentHealth = Math.min(health.currentHealth, health.maxHealth);
-        health.regenRate *= hyperthermia.regenMultiplier;
         player.saveComponent(health);
     }
 
+    /**
+     * Applies the hypothermia regen multiplier to the base regeneration for an entity if their hypothermia level is at
+     * the maximum. This only affects the base regeneration action. All other registered regeneration actions are
+     * ignored.
+     *
+     * @param event The collector event for regeneration actions, called before an entity's health is about to
+     *         be regenerated.
+     * @param entity The entity whose health is about to be regenerated.
+     * @param hyperthermia The entity's hyperthermia configuration.
+     */
+    @ReceiveEvent
+    public void beforeBaseRegen(BeforeRegenEvent event, EntityRef entity, HyperthermiaComponent hyperthermia) {
+        if (event.getId().equals(BASE_REGEN)) {
+            // TODO: Ideally, we should handle this the same as the other modifiers:
+            //  If hyperthermia is active (i.e. HyperthermiaComponent is present), only apply the multiplier here and
+            //  let the modifyHyperthermiaMultipliers adjust the multipliers.
+            if (hyperthermia.level >= 3) {
+                event.multiply(hyperthermia.regenMultiplier);
+            }
+        }
+    }
 
     /**
      * Reverts the player weakening by restoring the maxHealth and regeneration of the player to the original value.
      */
     private void revertWeakening(EntityRef player, HealthComponent health, HyperthermiaComponent hyperthermia) {
         player.send(new ChangeMaxHealthEvent(player.getParentPrefab().getComponent(HealthComponent.class).maxHealth));
-        player.send(new ActivateRegenEvent(health.regenRate));
-        health.regenRate /= hyperthermia.regenMultiplier;
         player.saveComponent(health);
     }
 
