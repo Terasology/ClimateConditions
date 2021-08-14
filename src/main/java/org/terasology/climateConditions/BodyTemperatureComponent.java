@@ -34,7 +34,7 @@ public class BodyTemperatureComponent implements Component<BodyTemperatureCompon
     BodyTemperatureLevel currentLevel = BodyTemperatureLevel.NORMAL;
 
     @Override
-    public void copy(BodyTemperatureComponent other) {
+    public void copyFrom(BodyTemperatureComponent other) {
         this.current = other.current;
         this.currentLevel = other.currentLevel;
     }

@@ -13,7 +13,7 @@ public class TemperatureGeneratorComponent implements Component<TemperatureGener
     public boolean heater;
 
     @Override
-    public void copy(TemperatureGeneratorComponent other) {
+    public void copyFrom(TemperatureGeneratorComponent other) {
         this.temperature = other.temperature;
         this.flatRange = other.flatRange;
         this.maxRange = other.maxRange;

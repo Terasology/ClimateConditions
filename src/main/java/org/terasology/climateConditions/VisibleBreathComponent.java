@@ -15,7 +15,7 @@ public class VisibleBreathComponent implements Component<VisibleBreathComponent>
     public EntityRef particleEntity = EntityRef.NULL;
 
     @Override
-    public void copy(VisibleBreathComponent other) {
+    public void copyFrom(VisibleBreathComponent other) {
         this.particleEntity = other.particleEntity;
     }
 }

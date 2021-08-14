@@ -30,7 +30,7 @@ public class HyperthermiaComponent implements Component<HyperthermiaComponent> {
     }
 
     @Override
-    public void copy(HyperthermiaComponent other) {
+    public void copyFrom(HyperthermiaComponent other) {
         this.walkSpeedMultiplier = other.walkSpeedMultiplier;
         this.jumpSpeedMultiplier = other.jumpSpeedMultiplier;
         this.regenMultiplier = other.regenMultiplier;

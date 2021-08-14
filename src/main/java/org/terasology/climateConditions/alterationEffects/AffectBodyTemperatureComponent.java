@@ -20,7 +20,7 @@ public class AffectBodyTemperatureComponent implements Component<AffectBodyTempe
     TemperatureAlterationCondition condition;
 
     @Override
-    public void copy(AffectBodyTemperatureComponent other) {
+    public void copyFrom(AffectBodyTemperatureComponent other) {
         this.postMultiplier = other.postMultiplier;
         this.condition = other.condition;
     }

@@ -13,7 +13,7 @@ public class HumidityGeneratorComponent implements Component<HumidityGeneratorCo
     public boolean humidifier;
 
     @Override
-    public void copy(HumidityGeneratorComponent other) {
+    public void copyFrom(HumidityGeneratorComponent other) {
         this.humidity = other.humidity;
         this.flatRange = other.flatRange;
         this.maxRange = other.maxRange;
