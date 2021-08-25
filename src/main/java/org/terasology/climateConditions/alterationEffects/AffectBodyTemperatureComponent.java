@@ -1,14 +1,14 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.alterationEffects;
 
-import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
  * This is the component added to entities with the body temperature alteration effect.
  */
-public class AffectBodyTemperatureComponent implements Component {
+public class AffectBodyTemperatureComponent implements Component<AffectBodyTemperatureComponent> {
     public float postMultiplier;
     /**
      * Stores information regarding condition for body temperature change alteration -
@@ -18,4 +18,10 @@ public class AffectBodyTemperatureComponent implements Component {
      * 3. ALWAYS - modifies the change irrespective of whether it is positive or negative.
      */
     TemperatureAlterationCondition condition;
+
+    @Override
+    public void copyFrom(AffectBodyTemperatureComponent other) {
+        this.postMultiplier = other.postMultiplier;
+        this.condition = other.condition;
+    }
 }

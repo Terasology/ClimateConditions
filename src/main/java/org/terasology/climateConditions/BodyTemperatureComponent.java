@@ -1,16 +1,16 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions;
 
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.network.Replicate;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
  * Provides Body Temperature to entity attached with BodyTemperatureComponent.
  * Is managed by {@link BodyTemperatureSystem}
  */
-public class BodyTemperatureComponent implements Component {
+public class BodyTemperatureComponent implements Component<BodyTemperatureComponent> {
 
     /**
      * Body Temperature Levels corresponding to value ranges:
@@ -32,4 +32,10 @@ public class BodyTemperatureComponent implements Component {
     /** Stores the current body temperature level.*/
     @Replicate
     BodyTemperatureLevel currentLevel = BodyTemperatureLevel.NORMAL;
+
+    @Override
+    public void copyFrom(BodyTemperatureComponent other) {
+        this.current = other.current;
+        this.currentLevel = other.currentLevel;
+    }
 }
