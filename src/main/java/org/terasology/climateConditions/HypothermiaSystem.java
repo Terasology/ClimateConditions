@@ -18,13 +18,13 @@ package org.terasology.climateConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.characters.AffectJumpForceEvent;
 import org.terasology.engine.logic.characters.GetMaxSpeedEvent;
 import org.terasology.engine.logic.characters.MovementMode;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 
 /**
  *  Handles effects related to Hypothermia.
