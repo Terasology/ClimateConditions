@@ -53,7 +53,9 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     public void setClimateConditionsBase(ConditionsBaseField conditionsBase) {
         base = conditionsBase;
     }
-    public void setMapHeight(int height) { mapHeight = height; }
+    public void setMapHeight(int height) {
+        mapHeight = height;
+    }
     public LocalPlayer getPlayer() {
         return localPlayer;
     }
