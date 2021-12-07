@@ -1,18 +1,5 @@
-/*
- * Copyright 2020 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.climateConditions;
 
 import org.terasology.alterationEffects.speed.StunAlterationEffect;
@@ -20,7 +7,6 @@ import org.terasology.engine.audio.StaticSound;
 import org.terasology.engine.audio.events.PlaySoundEvent;
 import org.terasology.engine.context.Context;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.entitySystem.prefab.PrefabManager;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
@@ -29,10 +15,11 @@ import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.characters.CharacterSoundComponent;
 import org.terasology.engine.logic.delay.DelayManager;
 import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
-import org.terasology.module.health.events.DoDamageEvent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.utilities.random.FastRandom;
 import org.terasology.engine.utilities.random.Random;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
+import org.terasology.module.health.events.DoDamageEvent;
 
 /**
  * Adds frostbite to the player.
@@ -43,16 +30,16 @@ import org.terasology.engine.utilities.random.Random;
 public class FrostbiteSystem extends BaseComponentSystem {
     public static final String FROSTBITE_DAMAGE_ACTION_ID = "Frostbite Damage";
 
+    private static final int HEALTH_DECREASE_INTERVAL = 20000;
+    private static final int INITIAL_DELAY = 5000;
+    private static final int HEALTH_DECREASE_AMOUNT = 15;
+
     @In
     private DelayManager delayManager;
     @In
     private PrefabManager prefabManager;
     @In
     private Context context;
-
-    private static final int healthDecreaseInterval = 20000;
-    private static final int initialDelay = 5000;
-    private static final int healthDecreaseAmount = 15;
     private Random random = new FastRandom();
 
     /**
@@ -71,7 +58,7 @@ public class FrostbiteSystem extends BaseComponentSystem {
     }
 
     private void applyFrostbite(EntityRef player) {
-        delayManager.addPeriodicAction(player, FROSTBITE_DAMAGE_ACTION_ID, initialDelay, healthDecreaseInterval);
+        delayManager.addPeriodicAction(player, FROSTBITE_DAMAGE_ACTION_ID, INITIAL_DELAY, HEALTH_DECREASE_INTERVAL);
     }
 
     private void removeFrostbite(EntityRef player) {
@@ -90,7 +77,7 @@ public class FrostbiteSystem extends BaseComponentSystem {
 
     private void applyFrostbiteDamagePlayer(EntityRef player) {
         Prefab frostbiteDamagePrefab = prefabManager.getPrefab("ClimateConditions:FrostbiteDamage");
-        player.send(new DoDamageEvent(healthDecreaseAmount, frostbiteDamagePrefab));
+        player.send(new DoDamageEvent(HEALTH_DECREASE_AMOUNT, frostbiteDamagePrefab));
     }
 
     private void applyStunEffect(EntityRef player, int duration) {

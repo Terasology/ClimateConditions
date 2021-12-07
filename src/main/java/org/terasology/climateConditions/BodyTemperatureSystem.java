@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions;
@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
@@ -19,6 +18,7 @@ import org.terasology.engine.logic.delay.PeriodicActionTriggeredEvent;
 import org.terasology.engine.logic.location.LocationComponent;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.world.WorldComponent;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 
 @RegisterSystem(value = RegisterMode.AUTHORITY)
 public class BodyTemperatureSystem extends BaseComponentSystem {
@@ -26,14 +26,15 @@ public class BodyTemperatureSystem extends BaseComponentSystem {
 
     private static final Logger logger = LoggerFactory.getLogger(BodyTemperatureSystem.class);
 
-    @In
-    private EntityManager entityManager;
+    private static final int CHECK_INTERVAL = 1000;
+
     @In
     ClimateConditionsSystem climateConditionsSystem;
     @In
     DelayManager delayManager;
+    @In
+    private EntityManager entityManager;
 
-    private static final int CHECK_INTERVAL = 1000;
     private float criticalLowBodyTemperatureThreshold = 0.17f;
     private float lowBodyTemperatureThreshold = 0.22f;
     private float reducedBodyTemperatureThreshold = 0.3f;

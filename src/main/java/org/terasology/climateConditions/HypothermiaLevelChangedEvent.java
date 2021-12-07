@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions;
@@ -17,6 +17,6 @@ import org.terasology.engine.entitySystem.event.BeforeAfterEvent;
  */
 public class HypothermiaLevelChangedEvent extends BeforeAfterEvent<Integer> {
     public HypothermiaLevelChangedEvent(int oldLevel, int newLevel) {
-        super(oldLevel,newLevel);
+        super(oldLevel, newLevel);
     }
 }

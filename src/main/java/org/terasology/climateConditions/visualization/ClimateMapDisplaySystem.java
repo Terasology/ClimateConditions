@@ -1,3 +1,6 @@
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
+
 package org.terasology.climateConditions.visualization;
 
 import org.terasology.climateConditions.ClimateConditionsSystem;
@@ -47,8 +50,12 @@ public class ClimateMapDisplaySystem extends BaseComponentSystem {
     public ConditionsBaseField getClimateConditionsBase() {
         return base;
     }
-    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) { base = conditionsBase; }
-    public void setMapHeight(int height) { mapHeight = height; }
+    public void setClimateConditionsBase(ConditionsBaseField conditionsBase) {
+        base = conditionsBase;
+    }
+    public void setMapHeight(int height) {
+        mapHeight = height;
+    }
     public LocalPlayer getPlayer() {
         return localPlayer;
     }

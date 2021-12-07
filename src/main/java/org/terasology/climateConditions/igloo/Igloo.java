@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.igloo;
@@ -6,8 +6,11 @@ package org.terasology.climateConditions.igloo;
 /**
  * Igloos are placed only in the Snow Biome.
  * They are very rare and represent remaining traces of abandoned settlements in the Snow Biome.
+ *
+ * This class is not a utility class. It's designed for future extension, e.g. variable size.
  */
-public class Igloo {
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
+public final class Igloo {
     /**
      * Used by {@link IglooProvider} to reserve borders for the Igloo Facet.
      * NOTE: The SIZE attribute has directly been obtained by measuring the extents of the Igloo Structure Template

@@ -24,13 +24,13 @@ import java.util.Objects;
 
 @RegisterPlugin
 public class IglooRasterizer implements WorldRasterizerPlugin {
-    @In
-    private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
-
     /**
      * Stores the prefab of the Igloo Structure Template.
      */
     Prefab iglooStructure;
+
+    @In
+    private WorldGeneratorPluginLibrary worldGeneratorPluginLibrary;
 
     @Override
     public void initialize() {

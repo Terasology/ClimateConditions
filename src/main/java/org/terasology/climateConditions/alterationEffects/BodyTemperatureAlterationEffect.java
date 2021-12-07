@@ -1,5 +1,4 @@
-
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.alterationEffects;
@@ -69,7 +68,8 @@ public class BodyTemperatureAlterationEffect implements AlterationEffect {
      * @param condition Stores information regarding type of body temperature change alteration - change depends on
      * whether temperature is decreasing or increasing.
      */
-    public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration, TemperatureAlterationCondition condition) {
+    public void applyEffect(EntityRef instigator, EntityRef entity, String id, float magnitude, long duration,
+                            TemperatureAlterationCondition condition) {
         // First, determine if the entity already has a swim speed component attached. If so, just replace the speed
         // multiplier, and then save the component. Otherwise, create a new one and attach it to the entity.
         AffectBodyTemperatureComponent affectBodyTemperature =
@@ -108,26 +108,24 @@ public class BodyTemperatureAlterationEffect implements AlterationEffect {
             }
         }
 
-        // If the modified duration is between the accepted values (0 and Long.MAX_VALUE), and the base duration is
-        // not infinite,
-        // add a delayed action to the DelayManager using the new system.
         if (modifiedDuration < Long.MAX_VALUE && modifiedDuration > 0 && duration != AlterationEffects.DURATION_INDEFINITE) {
+            // If the modified duration is between the accepted values (0 and Long.MAX_VALUE), and the base duration is
+            // not infinite,
+            // add a delayed action to the DelayManager using the new system.
             String effectID = effectModifyEvent.getEffectIDWithShortestDuration();
             delayManager.addDelayedAction(entity,
                     AlterationEffects.EXPIRE_TRIGGER_PREFIX + BODY_TEMPERATURE + "|" + effectID,
                     modifiedDuration);
-        }
-        // Otherwise, if the duration is greater than 0, there are no modifiers found, and the effect modify event
-        // was not consumed,
-        // add a delayed action to the DelayManager using the old system.
-        else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+        } else if (duration > 0 && !modifiersFound && !effectModifyEvent.isConsumed()) {
+            // Otherwise, if the duration is greater than 0, there are no modifiers found, and the effect modify event
+            // was not consumed,
+            // add a delayed action to the DelayManager using the old system.
             delayManager.addDelayedAction(entity,
                     AlterationEffects.EXPIRE_TRIGGER_PREFIX + BODY_TEMPERATURE, duration);
-        }
-        // Otherwise, if there are either no modifiers found, or none of the modifiers collected in the event have
-        // infinite
-        // duration, remove the component associated with this body temperature alteration effect.
-        else if ((!modifiersFound || !effectModifyEvent.getHasInfDuration()) && (duration != AlterationEffects.DURATION_INDEFINITE)) {
+        } else if ((!modifiersFound || !effectModifyEvent.getHasInfDuration()) && (duration != AlterationEffects.DURATION_INDEFINITE)) {
+            // Otherwise, if there are either no modifiers found, or none of the modifiers collected in the event have
+            // infinite
+            // duration, remove the component associated with this body temperature alteration effect.
             entity.removeComponent(AffectBodyTemperatureComponent.class);
         }
         // If this point is reached and none of the above if-clauses were met, that means there was at least one

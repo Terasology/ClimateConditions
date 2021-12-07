@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.climateConditions.igloo;
@@ -27,9 +27,9 @@ import org.terasology.engine.world.generator.plugin.RegisterPlugin;
 })
 @Produces(IglooFacet.class)
 public class IglooProvider implements FacetProviderPlugin {
-    private Noise noise;
     private static final int ARBITRARY_OVERLAP_OFFSET = 3;
     private static final int SNOW_BIOME_THRESHOLD = 96;
+    private Noise noise;
     //TODO: Get the snow biome threshold from the SolidRasterizer in CoreWorlds.
 
     @Override
@@ -58,11 +58,11 @@ public class IglooProvider implements FacetProviderPlugin {
                 for (int surfaceHeight : surfaceHeightFacet.getWorldColumn(wx, wz)) {
                     int seaLevel = seaLevelFacet.getSeaLevel();
                     // check if height is within this region
-                    if (surfaceHeight >= facet.getWorldRegion().minY() &&
-                            surfaceHeight <= facet.getWorldRegion().maxY()) {
+                    if (surfaceHeight >= facet.getWorldRegion().minY()
+                            && surfaceHeight <= facet.getWorldRegion().maxY()) {
                         // Sea Level + 96 is the height at which snow blocks are placed in all biomes.
-                        if (noise.noise(wx, surfaceHeight, wz) > 0.9999f && (surfaceHeight >= seaLevel + SNOW_BIOME_THRESHOLD ||
-                                biomeFacet.getWorld(wx, wz).getId().equals(CoreBiome.SNOW))) {
+                        if (noise.noise(wx, surfaceHeight, wz) > 0.9999f && (surfaceHeight >= seaLevel + SNOW_BIOME_THRESHOLD
+                                || biomeFacet.getWorld(wx, wz).getId().equals(CoreBiome.SNOW))) {
                             facet.setWorld(wx, surfaceHeight, wz, new Igloo());
                         }
                     }
