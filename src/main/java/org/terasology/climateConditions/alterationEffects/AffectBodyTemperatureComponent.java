@@ -17,7 +17,7 @@ public class AffectBodyTemperatureComponent implements Component<AffectBodyTempe
      * 2. ON_INCREASE - when the change in temperature is positive.
      * 3. ALWAYS - modifies the change irrespective of whether it is positive or negative.
      */
-    TemperatureAlterationCondition condition;
+    public TemperatureAlterationCondition condition;
 
     @Override
     public void copyFrom(AffectBodyTemperatureComponent other) {
