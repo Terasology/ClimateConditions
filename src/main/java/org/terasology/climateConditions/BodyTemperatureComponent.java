@@ -31,7 +31,7 @@ public class BodyTemperatureComponent implements Component<BodyTemperatureCompon
 
     /** Stores the current body temperature level.*/
     @Replicate
-    BodyTemperatureLevel currentLevel = BodyTemperatureLevel.NORMAL;
+    public BodyTemperatureLevel currentLevel = BodyTemperatureLevel.NORMAL;
 
     @Override
     public void copyFrom(BodyTemperatureComponent other) {
